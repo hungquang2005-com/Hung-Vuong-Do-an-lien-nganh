@@ -146,6 +146,46 @@ main { min-height: 65vh; }
   transform: translateY(-1px);
 }
 
+.nav-category-menu { position: relative; display: flex; align-items: center; }
+.nav-category-menu::after { content: ""; position: absolute; z-index: 1; top: 100%; left: 0; right: 0; height: 12px; }
+.nav-category-chevron { margin-left: 5px; font-size: 10px; transition: transform .25s var(--ease); }
+.nav-category-menu:hover .nav-category-chevron, .nav-category-menu:focus-within .nav-category-chevron { transform: rotate(180deg); }
+.nav-category-dropdown {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 10px);
+  left: 50%;
+  width: max-content;
+  min-width: 265px;
+  max-width: min(340px, calc(100vw - 32px));
+  padding: 10px;
+  border: 1px solid rgba(15, 79, 63, .12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .98);
+  box-shadow: 0 20px 50px rgba(17, 27, 23, .16);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 10px) scale(.98);
+  transform-origin: top center;
+  transition: opacity .22s var(--ease), transform .28s var(--ease), visibility .22s;
+}
+.nav-category-menu:hover .nav-category-dropdown, .nav-category-menu:focus-within .nav-category-dropdown {
+  opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0) scale(1);
+}
+.nav-category-heading { display: grid; gap: 3px; padding: 10px 12px 12px; border-bottom: 1px solid var(--line); }
+.nav-category-heading span { color: var(--brand); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.nav-category-heading small { color: var(--muted); font-size: 12px; }
+.nav-links .nav-category-dropdown a {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin-top: 3px;
+  border-radius: 9px; color: var(--ink); font-size: 13px; transform: none;
+  transition: color .2s var(--ease), background .2s var(--ease), padding .2s var(--ease);
+}
+.nav-links .nav-category-dropdown a:hover, .nav-links .nav-category-dropdown a.active { color: var(--brand); background: rgba(15,79,63,.08); padding-left: 16px; transform: none; }
+.nav-category-dropdown a > i:first-child { width: 16px; color: var(--brand-2); text-align: center; }
+.nav-category-dropdown .nav-category-arrow { margin-left: auto; color: var(--brand); font-size: 10px; opacity: 0; transform: translateX(-4px); transition: .2s var(--ease); }
+.nav-category-dropdown a:hover .nav-category-arrow, .nav-category-dropdown a.active .nav-category-arrow { opacity: 1; transform: translateX(0); }
+
 .nav-actions { display: flex; align-items: center; gap: 8px; }
 .icon-btn, .menu-toggle {
   position: relative;
@@ -280,6 +320,10 @@ main { min-height: 65vh; }
 .mobile-panel.open { display: grid; gap: 8px; }
 .mobile-panel a { padding: 11px 12px; border-radius: 6px; color: var(--muted); }
 .mobile-panel a:hover { background: rgba(15,79,63,.08); color: var(--brand); }
+.mobile-category-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 11px 12px; border-radius: 6px; color: var(--muted); text-align: left; }
+.mobile-category-toggle:hover { background: rgba(15,79,63,.08); color: var(--brand); }
+.mobile-category-list { display: grid; gap: 2px; padding: 3px 0 5px 12px; border-left: 2px solid rgba(15,79,63,.14); animation: category-list-in .22s var(--ease) both; }
+.mobile-panel .mobile-category-list a { padding: 9px 12px; font-size: 13px; }
 
 .btn {
   display: inline-flex;
@@ -573,8 +617,7 @@ main { min-height: 65vh; }
 
 .shop-layout {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
 }
 .filter-panel {
@@ -829,6 +872,11 @@ main { min-height: 65vh; }
 .reveal.visible, .reveal-left.visible, .reveal-right.visible { opacity: 1; transform: translate(0, 0); }
 
 @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+@keyframes category-list-in { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-category-dropdown, .nav-category-chevron, .nav-category-dropdown a, .mobile-category-list { animation: none !important; transition-duration: .01ms !important; }
+}
 
 @media (max-width: 1040px) {
   .navbar { grid-template-columns: auto 1fr auto; }
