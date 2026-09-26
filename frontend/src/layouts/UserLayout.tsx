@@ -4,19 +4,27 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useReveal } from '../hooks/useReveal';
+import { productApi } from '../api/services';
 
 export function UserLayout() {
   const { user, logout } = useAuth();
   const { cart } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [keyword, setKeyword] = useState('');
+  const [categories, setCategories] = useState<string[]>([]);
+  const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const selectedCategory = new URLSearchParams(location.search).get('category');
 
   // Watches for .reveal / .reveal-left / .reveal-right elements — on this
   // page and any later route or async data — and fades/slides them into
   // view, instead of leaving them stuck at opacity: 0.
   useReveal();
+
+  useEffect(() => {
+    productApi.categories().then(response => setCategories(response.data)).catch(() => setCategories([]));
+  }, []);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -63,7 +71,14 @@ export function UserLayout() {
 
           <div className="nav-links">
             <NavLink end to="/">Trang chủ</NavLink>
-            <NavLink to="/products">Sản phẩm</NavLink>
+            <div className="nav-category-menu">
+              <NavLink to="/products" aria-haspopup="true">Sản phẩm <i className="fa-solid fa-chevron-down nav-category-chevron" /></NavLink>
+              <div className="nav-category-dropdown" role="menu">
+                <div className="nav-category-heading"><span>Khám phá</span><small>Chọn danh mục sản phẩm</small></div>
+                <Link className={location.pathname === '/products' && !selectedCategory ? 'active' : ''} to="/products" role="menuitem"><i className="fa-solid fa-layer-group" /> Tất cả sản phẩm <i className="fa-solid fa-arrow-right nav-category-arrow" /></Link>
+                {categories.map(category => <Link className={selectedCategory === category ? 'active' : ''} key={category} to={`/products?category=${encodeURIComponent(category)}`} role="menuitem"><i className="fa-solid fa-tag" /> <span>{category}</span><i className="fa-solid fa-arrow-right nav-category-arrow" /></Link>)}
+              </div>
+            </div>
             <NavLink to="/about">Giới thiệu</NavLink>
             <NavLink to="/contact">Liên hệ</NavLink>
             <NavLink to="/orders">Đơn hàng</NavLink>
@@ -107,7 +122,8 @@ export function UserLayout() {
             <button type="submit" aria-label="Tìm kiếm"><i className="fa-solid fa-magnifying-glass" /></button>
           </form>
           <NavLink end to="/">Trang chủ</NavLink>
-          <NavLink to="/products">Sản phẩm</NavLink>
+          <button type="button" className="mobile-category-toggle" aria-expanded={mobileCategoriesOpen} onClick={() => setMobileCategoriesOpen(open => !open)}>Sản phẩm <i className={`fa-solid fa-chevron-${mobileCategoriesOpen ? 'up' : 'down'}`} /></button>
+          {mobileCategoriesOpen && <div className="mobile-category-list"><NavLink end to="/products">Tất cả sản phẩm</NavLink>{categories.map(category => <NavLink key={category} to={`/products?category=${encodeURIComponent(category)}`}>{category}</NavLink>)}</div>}
           <NavLink to="/about">Giới thiệu</NavLink>
           <NavLink to="/contact">Liên hệ</NavLink>
           <NavLink to="/orders">Đơn hàng</NavLink>
