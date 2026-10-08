@@ -127,6 +127,10 @@
 .admin-page-header { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; margin-bottom:1.5rem; }
 .admin-page-header h1 { margin-top:.15rem; font-size:clamp(26px,3vw,38px); }
 .admin-page-header p { color:var(--text-sub); margin:.3rem 0 0; }
+.orders-live-status { display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; padding:.65rem .85rem; border:1px solid #dce9e1; border-radius:999px; background:#f4faf6; color:#245b42; font-size:.82rem; }
+.orders-live-status small { color:var(--text-sub); }
+.orders-live-dot { width:.55rem; height:.55rem; flex:0 0 auto; border-radius:50%; background:#1d9b5c; box-shadow:0 0 0 4px rgba(29,155,92,.12); }
+@media (max-width:700px) { .orders-admin-header { align-items:flex-start; flex-direction:column; } .orders-live-status { border-radius:12px; } }
 .eyebrow,.admin-kicker { display:inline-flex; margin-bottom:6px; color:#5d769b; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }
 .admin-breadcrumb { max-width:1380px; margin:0 auto; padding:1rem 1.5rem .25rem; color:var(--text-sub); font-size:.82rem; display:flex; gap:.4rem; align-items:center; }
 

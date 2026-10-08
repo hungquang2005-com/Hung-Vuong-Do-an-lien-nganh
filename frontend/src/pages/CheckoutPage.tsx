@@ -105,13 +105,16 @@ export function CheckoutPage() {
             <Step active={step >= 2} icon="fa-wallet" text="Thanh toán" />
             <Step active={step >= 3} icon="fa-file-invoice" text="Xác nhận" />
           </div>
-          <h2 className="checkout-title"><i className="fa-solid fa-location-dot" /> Địa chỉ nhận hàng</h2>
+          <div className="checkout-section-intro">
+            <h2 className="checkout-title"><i className="fa-solid fa-location-dot" /> Địa chỉ nhận hàng</h2>
+            <p>Vui lòng điền thông tin người nhận và địa chỉ giao hàng có thể nhận bưu kiện.</p>
+          </div>
           <div className="form-grid">
-            <Field label="Họ tên" value={form.fullName} set={(value) => update('fullName', value)} required />
-            <Field label="Số điện thoại" value={form.phone} set={(value) => update('phone', value)} required />
-            <Field label="Email" value={form.email} set={(value) => update('email', value)} type="email" required full />
-            <Field label="Địa chỉ" value={form.address} set={(value) => update('address', value)} textarea required full />
-            <Field label="Ghi chú" value={form.note} set={(value) => update('note', value)} textarea full />
+            <Field label="Họ và tên người nhận" hint="Tên người nhận hàng" autoComplete="name" value={form.fullName} set={(value) => update('fullName', value)} required />
+            <Field label="Số điện thoại" hint="Ví dụ: 0901 234 567" autoComplete="tel" value={form.phone} set={(value) => update('phone', value)} type="tel" required />
+            <Field label="Email nhận xác nhận đơn" hint="Bạn sẽ nhận thông tin đơn hàng qua email này" autoComplete="email" value={form.email} set={(value) => update('email', value)} type="email" required full />
+            <Field label="Địa chỉ giao hàng" hint="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố" autoComplete="street-address" value={form.address} set={(value) => update('address', value)} textarea required full />
+            <Field label="Ghi chú cho người giao hàng" hint="Không bắt buộc · Ví dụ: gọi trước khi giao" value={form.note} set={(value) => update('note', value)} textarea full />
           </div>
           <div className="actions">
             <button className="btn btn-primary">Tiếp tục thanh toán <i className="fa-solid fa-arrow-right" /></button>
@@ -189,10 +192,12 @@ export function CheckoutPage() {
 
     {step === 3 && <div className="invoice-container">
       <div className="invoice-header">
+        <span className="eyebrow dark">HUNG GIA DỤNG · ĐƠN HÀNG</span>
         <h1><i className="fa-solid fa-file-invoice" /> Hóa Đơn Xác Nhận</h1>
-        <p>Vui lòng kiểm tra thông tin trước khi xác nhận đơn hàng</p>
+        <p>Kiểm tra đầy đủ thông tin giao hàng, sản phẩm và thanh toán trước khi đặt hàng.</p>
       </div>
       <form className="invoice-box" onSubmit={confirm}>
+        <div className="invoice-brand-row"><div><strong>HUNG GIA DỤNG</strong><span>Hóa đơn tạm tính · Mã đơn sẽ được tạo sau khi xác nhận</span></div><span className="invoice-status"><i className="fa-solid fa-circle-check" /> Chờ xác nhận</span></div>
         <div className="invoice-section">
           <div className="invoice-section-title">Thông tin giao hàng</div>
           <div className="invoice-info">
@@ -200,6 +205,7 @@ export function CheckoutPage() {
             <Info label="Email" value={form.email} />
             <Info label="Số điện thoại" value={form.phone} />
             <Info label="Địa chỉ giao hàng" value={form.address} />
+            <Info label="Ghi chú giao hàng" value={form.note || 'Không có'} />
           </div>
         </div>
         <div className="invoice-section">
@@ -208,17 +214,17 @@ export function CheckoutPage() {
             <thead>
               <tr>
                 <th>Sản phẩm</th>
+                <th style={{ textAlign: 'right' }}>Đơn giá</th>
                 <th style={{ textAlign: 'center' }}>Số lượng</th>
-                <th style={{ textAlign: 'right' }}>Giá</th>
                 <th style={{ textAlign: 'right' }}>Thành tiền</th>
               </tr>
             </thead>
             <tbody>
               {cart.items.map((item) => (
                 <tr key={item.id}>
-                  <td>{item.product.name}</td>
-                  <td style={{ textAlign: 'center' }}>{item.quantity}</td>
+                  <td><strong>{item.product.name}</strong>{item.product.brand && <small className="invoice-product-meta">{item.product.brand}{item.product.category ? ` · ${item.product.category}` : ''}</small>}</td>
                   <td style={{ textAlign: 'right' }}>{formatVnd(item.product.price)}</td>
+                  <td style={{ textAlign: 'center' }}>{item.quantity}</td>
                   <td style={{ textAlign: 'right', fontWeight: 600 }}>{formatVnd(item.subtotal)}</td>
                 </tr>
               ))}
@@ -227,15 +233,19 @@ export function CheckoutPage() {
         </div>
         <div className="invoice-total">
           <div className="invoice-total-box">
-            <div className="invoice-total-label">Tổng tiền</div>
+            <div className="invoice-total-line"><span>Tạm tính ({cart.itemCount} sản phẩm)</span><strong>{formatVnd(cart.total)}</strong></div>
+            <div className="invoice-total-line"><span>Phí giao hàng</span><strong>Miễn phí</strong></div>
+            <div className="invoice-total-label">Tổng thanh toán</div>
             <div className="invoice-total-amount">{formatVnd(cart.total)}</div>
             <div className="payment-method-box">
-              <div style={{ fontSize: '.9rem', color: 'var(--muted)' }}>Phương thức thanh toán:</div>
-              <div style={{ fontWeight: 600, marginTop: '.5rem' }}>{form.paymentMethod}</div>
+              <div style={{ fontSize: '.9rem', color: 'var(--muted)' }}>Phương thức thanh toán</div>
+              <div style={{ fontWeight: 600, marginTop: '.5rem' }}>{paymentLabel(form.paymentMethod)}</div>
             </div>
           </div>
         </div>
+        <p className="invoice-disclaimer">Hóa đơn này là thông tin xác nhận đơn hàng, không thay thế hóa đơn VAT.</p>
         <div className="actions">
+          <button type="button" className="btn-back invoice-print-button" onClick={() => window.print()}><i className="fa-solid fa-print" /> In hóa đơn</button>
           <button className="btn-confirm" disabled={busy}><i className="fa-solid fa-check" /> {busy ? 'Đang xác nhận...' : 'Xác nhận đơn hàng'}</button>
           <button type="button" className="btn-back" onClick={() => go(2)}><i className="fa-solid fa-arrow-left" /> Quay lại</button>
         </div>
@@ -248,13 +258,18 @@ function Step({ active, icon, text }: { active: boolean; icon: string; text: str
   return <div className={`checkout-step ${active ? 'active' : ''}`}><i className={`fa-solid ${icon}`} /><span>{text}</span></div>;
 }
 
-function Field({ label, value, set, type = 'text', textarea = false, required = false, full = false }: { label: string; value: string; set: (value: string) => void; type?: string; textarea?: boolean; required?: boolean; full?: boolean }) {
+function Field({ label, hint, autoComplete, value, set, type = 'text', textarea = false, required = false, full = false }: { label: string; hint?: string; autoComplete?: string; value: string; set: (value: string) => void; type?: string; textarea?: boolean; required?: boolean; full?: boolean }) {
   return <div className={`field ${full ? 'full' : ''}`}>
     <label>{label} {required && <span className="required">*</span>}</label>
     {textarea
-      ? <textarea className="form-input" value={value} onChange={(event) => set(event.target.value)} required={required} />
-      : <input className="form-input" type={type} value={value} onChange={(event) => set(event.target.value)} required={required} />}
+      ? <textarea className="form-input" value={value} onChange={(event) => set(event.target.value)} required={required} autoComplete={autoComplete} />
+      : <input className="form-input" type={type} value={value} onChange={(event) => set(event.target.value)} required={required} autoComplete={autoComplete} />}
+    {hint && <small className="field-hint">{hint}</small>}
   </div>;
+}
+
+function paymentLabel(method: PaymentMethod) {
+  return method === 'CASH' ? 'Tiền mặt khi nhận hàng' : method === 'CARD' ? 'Thẻ tín dụng/ghi nợ' : 'Thanh toán trực tuyến qua PayOS (QR)';
 }
 
 function Info({ label, value }: { label: string; value: string }) {
