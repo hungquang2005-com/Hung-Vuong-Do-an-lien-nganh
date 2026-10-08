@@ -64,11 +64,12 @@ export function OrdersAdminPage() {
     </div>
     <div className="admin-panel">
       <table className="admin-table">
-        <thead><tr><th>Đơn</th><th>Khách</th><th>Tổng</th><th>Thanh toán</th><th>Trạng thái</th><th>Ngày</th></tr></thead>
+        <thead><tr><th>Đơn</th><th>Khách</th><th>Tổng</th><th>Voucher</th><th>Thanh toán</th><th>Trạng thái</th><th>Ngày</th></tr></thead>
         <tbody>{orders.map((order) => <tr key={order.id}>
           <td><b>#{order.id}</b><div style={{ color: '#4d6b4d', fontSize: '.72rem' }}>{order.phone}</div></td>
           <td>{order.fullName}<div style={{ color: '#4d6b4d', fontSize: '.72rem' }}>{order.address}</div></td>
           <td>{formatVnd(order.totalAmount)}</td>
+          <td>{order.couponCode ? <><b>{order.couponCode}</b><div style={{ color: '#4d6b4d', fontSize: '.72rem' }}>−{formatVnd(order.discountAmount)}</div></> : '—'}</td>
           <td>{order.paymentMethod} / {order.paymentStatus}</td>
           <td><select className="admin-select" value={order.status} onChange={(event) => change(order, event.target.value as Order['status'])}>{['PENDING', 'CONFIRMED', 'DELIVERED', 'CANCELLED'].map((status) => <option key={status}>{status}</option>)}</select></td>
           <td>{new Date(order.createdAt).toLocaleString('vi-VN')}</td>

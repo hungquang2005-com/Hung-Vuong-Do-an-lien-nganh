@@ -118,6 +118,9 @@ CREATE TABLE IF NOT EXISTS orders (
     phone               VARCHAR(15) NOT NULL,
     address             TEXT NOT NULL,
     total_amount        DECIMAL(15, 0) NOT NULL,
+    subtotal_amount     DECIMAL(15, 0) NOT NULL DEFAULT 0,
+    discount_amount     DECIMAL(15, 0) NOT NULL DEFAULT 0,
+    coupon_code         VARCHAR(50) NULL,
     status              ENUM('PENDING', 'CONFIRMED', 'DELIVERED', 'CANCELLED')
                         NOT NULL DEFAULT 'PENDING',
     payment_method      ENUM('QR', 'CARD', 'CASH') NOT NULL,
@@ -126,6 +129,23 @@ CREATE TABLE IF NOT EXISTS orders (
     created_at          DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at          DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS coupons (
+    id                  INT AUTO_INCREMENT PRIMARY KEY,
+    code                VARCHAR(50) NOT NULL UNIQUE,
+    description         TEXT NULL,
+    `discountType`      ENUM('percentage', 'fixed') NOT NULL DEFAULT 'percentage',
+    `discountValue`     DECIMAL(12, 2) NOT NULL,
+    `minOrderAmount`    DECIMAL(12, 2) NOT NULL DEFAULT 0,
+    `maxDiscountAmount` DECIMAL(12, 2) NULL,
+    `usageLimit`        INT NULL,
+    `usedCount`         INT NOT NULL DEFAULT 0,
+    `startDate`         DATETIME NOT NULL,
+    `endDate`           DATETIME NOT NULL,
+    `isActive`          TINYINT(1) NOT NULL DEFAULT 1,
+    `createdAt`         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt`         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ==========================================
