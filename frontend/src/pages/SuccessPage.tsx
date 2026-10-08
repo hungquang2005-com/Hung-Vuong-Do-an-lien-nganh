@@ -32,11 +32,14 @@ export function SuccessPage() {
         if (!cancelled && currentOrder) {
           const paid = currentOrder.paymentStatus === 'PAID';
           const usesOnlinePayment = currentOrder.paymentMethod === 'QR' || currentOrder.paymentMethod === 'PAYOS';
+          const isCardSimulation = currentOrder.paymentMethod === 'CARD';
           const message = paid
             ? `Thanh toán thành công! Mã đơn #${id}`
             : usesOnlinePayment
               ? `Đơn hàng #${id} đã tạo, đang chờ xác nhận thanh toán.`
-              : `Đặt hàng thành công! Mã đơn #${id}. Thanh toán khi nhận hàng.`;
+              : isCardSimulation
+                ? `Đặt hàng thành công! Thanh toán thẻ đang mô phỏng, chưa trừ tiền. Mã đơn #${id}.`
+                : `Đặt hàng thành công! Mã đơn #${id}. Thanh toán khi nhận hàng.`;
           window.dispatchEvent(new CustomEvent('toast', { detail: message }));
         }
       } catch {
@@ -52,19 +55,24 @@ export function SuccessPage() {
 
   const isPaid = order?.paymentStatus === 'PAID';
   const isCash = order?.paymentMethod === 'CASH';
+  const isCardSimulation = order?.paymentMethod === 'CARD';
   const heading = isPaid ? 'Thanh toán thành công!' : 'Đặt hàng thành công!';
   const description = isPaid
     ? 'Cảm ơn bạn đã thanh toán. Đơn hàng của bạn đang được xử lý.'
     : isCash
       ? 'Cảm ơn bạn đã đặt hàng. Bạn sẽ thanh toán cho nhân viên giao hàng khi nhận sản phẩm.'
-      : 'Đơn hàng đã được tạo. Hệ thống đang xác nhận trạng thái thanh toán của bạn.';
+      : isCardSimulation
+        ? 'Đơn hàng đã được tạo thành công ở chế độ mô phỏng. Chưa có giao dịch ngân hàng và chưa trừ tiền.'
+        : 'Đơn hàng đã được tạo. Hệ thống đang xác nhận trạng thái thanh toán của bạn.';
   const paymentText = loading
     ? 'Đang kiểm tra thanh toán'
     : isPaid
       ? 'Thanh toán thành công'
       : isCash
         ? 'Thanh toán khi nhận hàng'
-        : 'Chưa xác nhận thanh toán';
+        : isCardSimulation
+          ? 'Mô phỏng · chưa trừ tiền'
+          : 'Chưa xác nhận thanh toán';
 
   return <div className="success-container">
     <div className="success-box">

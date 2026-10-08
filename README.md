@@ -9,3 +9,5 @@ cập nhật giao diện sản phẩm
 cập nhật thay đổi giao diện thông tin
 
 cập nhật giao diện thông tin đơn hàng
+
+cập nhật thah toán cash
