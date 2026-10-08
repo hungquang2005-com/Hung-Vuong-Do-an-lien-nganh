@@ -16,6 +16,9 @@ type CheckoutForm = {
   note: string;
 };
 
+type CardType = 'DOMESTIC' | 'INTERNATIONAL';
+type CardDetails = { holder: string; type: CardType; provider: string };
+
 export function CheckoutPage() {
   const { cart, refresh } = useCart();
   const { user } = useAuth();
@@ -31,6 +34,7 @@ export function CheckoutPage() {
   });
   const [step, setStep] = useState(loc.pathname.endsWith('/payment') ? 2 : loc.pathname.endsWith('/invoice') ? 3 : 1);
   const [busy, setBusy] = useState(false);
+  const [cardDetails, setCardDetails] = useState<CardDetails>({ holder: '', type: 'DOMESTIC', provider: 'NAPAS' });
 
   useEffect(() => {
     try {
@@ -128,7 +132,7 @@ export function CheckoutPage() {
       <section className="page-hero compact">
         <span className="eyebrow dark">Payment</span>
         <h1>Chọn phương thức thanh toán</h1>
-        <p>Thanh toán online qua PayOS hoặc thanh toán tiền mặt khi nhận hàng.</p>
+        <p>Chọn phương thức phù hợp. Thanh toán thẻ hiện đang chạy ở chế độ mô phỏng phát triển.</p>
       </section>
       <section className="payment-shell">
         <form className="payment-panel" onSubmit={nextPay}>
@@ -140,7 +144,7 @@ export function CheckoutPage() {
             {([
               ['QR', 'Mã QR', 'Quét mã để thanh toán online', 'fa-qrcode'],
               ['CASH', 'Tiền mặt', 'Thanh toán khi nhận hàng', 'fa-money-bill-wave'],
-              ['CARD', 'Thẻ tín dụng', 'Chưa kết nối cổng thanh toán thẻ', 'fa-credit-card'],
+              ['CARD', 'Thẻ nội địa / quốc tế', 'Mô phỏng giao diện thanh toán thẻ', 'fa-credit-card'],
             ] as const).map(([value, name, sub, icon]) => (
               <label className="payment-method" key={value}>
                 <input type="radio" checked={form.paymentMethod === value} onChange={() => update('paymentMethod', value)} />
@@ -171,16 +175,33 @@ export function CheckoutPage() {
             </div>
           </div>}
           {form.paymentMethod === 'CARD' && <div className="method-detail active">
-            <div className="cash-box">
-              <i className="fa-solid fa-credit-card" />
-              <div>
-                <h3>Thanh toán bằng thẻ</h3>
-                <p>Thanh toán thẻ cần được xử lý qua cổng thanh toán bảo mật. Dự án hiện chưa cấu hình cổng hỗ trợ thẻ; không nhập số thẻ tại đây.</p>
+            <div className="card-demo-notice"><i className="fa-solid fa-flask" /><div><strong>Chế độ mô phỏng phát triển</strong><span>Chưa kết nối ngân hàng và không phát sinh giao dịch thật. Không nhập số thẻ, ngày hết hạn hoặc mã CVV thật. Thông tin bên dưới chỉ dùng để xem trước đơn.</span></div></div>
+            <div className="card-demo-preview"><div><span>HUNG GIA DỤNG</span><b>{cardDetails.type === 'DOMESTIC' ? 'NỘI ĐỊA' : 'QUỐC TẾ'}</b></div><strong>••••　••••　••••　4242</strong><small>THẺ MÔ PHỎNG · KHÔNG THU TIỀN</small></div>
+            <div className="card-demo-form">
+              <Field label="Tên chủ thẻ (mô phỏng)" hint="Nhập tên bất kỳ để hoàn tất bước thử nghiệm" autoComplete="off" value={cardDetails.holder} set={(holder) => setCardDetails((current) => ({ ...current, holder }))} required full />
+              <div className="field">
+                <label htmlFor="demo-card-type">Loại thẻ <span className="required">*</span></label>
+                <select id="demo-card-type" className="form-select" required value={cardDetails.type} onChange={(event) => {
+                  const type = event.target.value as CardType;
+                  setCardDetails({ holder: cardDetails.holder, type, provider: type === 'DOMESTIC' ? 'NAPAS' : 'VISA' });
+                }}>
+                  <option value="DOMESTIC">Thẻ nội địa</option>
+                  <option value="INTERNATIONAL">Thẻ quốc tế</option>
+                </select>
+              </div>
+              <div className="field">
+                <label htmlFor="demo-card-provider">Ngân hàng / tổ chức thẻ <span className="required">*</span></label>
+                <select id="demo-card-provider" className="form-select" required value={cardDetails.provider} onChange={(event) => setCardDetails((current) => ({ ...current, provider: event.target.value }))}>
+                  {(cardDetails.type === 'DOMESTIC'
+                    ? [['NAPAS', 'NAPAS'], ['VIETCOMBANK', 'Vietcombank'], ['BIDV', 'BIDV'], ['TECHCOMBANK', 'Techcombank'], ['MB', 'MB Bank'], ['ACB', 'ACB']]
+                    : [['VISA', 'Visa'], ['MASTERCARD', 'Mastercard'], ['JCB', 'JCB'], ['AMEX', 'American Express']]
+                  ).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                </select>
               </div>
             </div>
           </div>}
-          <button className="btn btn-primary btn-wide" style={{ marginTop: 24 }} disabled={form.paymentMethod === 'CARD'}>
-            <i className="fa-solid fa-file-invoice" /> {form.paymentMethod === 'CARD' ? 'Cổng thẻ chưa khả dụng' : 'Xem hóa đơn xác nhận'}
+          <button className="btn btn-primary btn-wide" style={{ marginTop: 24 }}>
+            <i className="fa-solid fa-file-invoice" /> {form.paymentMethod === 'CARD' ? 'Tiếp tục xem đơn mô phỏng' : 'Xem hóa đơn xác nhận'}
           </button>
           <button type="button" className="btn btn-ghost btn-wide" style={{ marginTop: 10 }} onClick={() => go(1)}>
             Quay lại
@@ -239,7 +260,8 @@ export function CheckoutPage() {
             <div className="invoice-total-amount">{formatVnd(cart.total)}</div>
             <div className="payment-method-box">
               <div style={{ fontSize: '.9rem', color: 'var(--muted)' }}>Phương thức thanh toán</div>
-              <div style={{ fontWeight: 600, marginTop: '.5rem' }}>{paymentLabel(form.paymentMethod)}</div>
+              <div style={{ fontWeight: 600, marginTop: '.5rem' }}>{form.paymentMethod === 'CARD' ? `Mô phỏng ${cardDetails.type === 'DOMESTIC' ? 'thẻ nội địa' : 'thẻ quốc tế'} · ${cardDetails.provider} · ${cardDetails.holder}` : paymentLabel(form.paymentMethod)}</div>
+              {form.paymentMethod === 'CARD' && <small className="invoice-demo-note">Không có giao dịch thật · Không thu tiền</small>}
             </div>
           </div>
         </div>

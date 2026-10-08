@@ -955,6 +955,18 @@
     .checkout-section-intro p, .field-hint { color: var(--muted); }
     .checkout-section-intro p { margin: 0; line-height: 1.6; }
     .field-hint { display: block; margin-top: 7px; font-size: 13px; line-height: 1.45; }
+    .card-demo-notice { display:flex; align-items:flex-start; gap:12px; margin:18px 0; padding:15px 16px; border:1px solid #f0d99b; border-radius:12px; background:#fff9e8; color:#76570c; line-height:1.55; }
+    .card-demo-notice > i { margin-top:3px; font-size:18px; }
+    .card-demo-notice div { display:grid; gap:4px; }
+    .card-demo-notice span { font-size:13px; }
+    .card-demo-preview { display:grid; gap:24px; width:min(100%, 390px); min-height:190px; margin:18px 0 24px; padding:22px; border-radius:18px; color:#fff; background:linear-gradient(135deg,#145c48,#0b382d 72%,#d4b63c); box-shadow:0 16px 32px rgba(13,67,51,.2); }
+    .card-demo-preview > div { display:flex; justify-content:space-between; gap:10px; align-items:center; font-size:12px; letter-spacing:.08em; }
+    .card-demo-preview > div b { padding:5px 8px; border:1px solid rgba(255,255,255,.35); border-radius:999px; font-size:10px; }
+    .card-demo-preview > strong { align-self:end; font-size:19px; letter-spacing:.05em; }
+    .card-demo-preview > small { font-size:10px; letter-spacing:.12em; opacity:.8; }
+    .card-demo-form { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px 20px; }
+    .card-demo-form .field.full { grid-column:1 / -1; }
+    .invoice-demo-note { display:block; margin-top:7px; color:#8a6508; line-height:1.45; }
     .field label { line-height: 1.45; }
     .form-grid { gap: 22px 24px; }
     .form-input, .form-select { background: #fff; border-radius: 10px; }
@@ -1003,6 +1015,8 @@
       .invoice-items-table { font-size: 13px; }
       .invoice-items-table th, .invoice-items-table td { padding: 10px 6px; }
       .invoice-items-table th:first-child { width: 36%; }
+      .card-demo-form { grid-template-columns:1fr; }
+      .card-demo-form .field.full { grid-column:auto; }
     }
     @media (max-width: 480px) {
       .checkout-steps { grid-template-columns: 1fr; }
