@@ -108,6 +108,9 @@ export interface Order {
   phone: string;
   address: string;
   totalAmount: number;
+  subtotalAmount: number;
+  discountAmount: number;
+  couponCode: string | null;
   status: OrderStatus;
   paymentMethod: PaymentMethod;
   paymentStatus: 'UNPAID' | 'PAID';

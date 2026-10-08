@@ -10,6 +10,7 @@ import { OrderItem } from '../database/entities/order-item.entity';
 import { Payment } from '../database/entities/payment.entity';
 import { Product } from '../database/entities/product.entity';
 import { User } from '../database/entities/user.entity';
+import { Coupon, CouponDiscountType } from '../database/entities/coupon.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
  
@@ -33,13 +34,42 @@ export class OrdersService {
       const cartItems = await manager.getRepository(CartItem).find({ where: { cartId: cart.id }, relations: ['product'] });
       if (!cartItems.length) throw new BadRequestException('Giỏ hàng đang trống');
  
-      let total = 0;
+      let subtotal = 0;
       for (const item of cartItems) {
         if (item.product.stock < item.quantity) {
           throw new BadRequestException(`Sản phẩm ${item.product.name} không đủ tồn kho`);
         }
-        total += Number(item.product.price) * item.quantity;
+        subtotal += Number(item.product.price) * item.quantity;
       }
+
+      let discount = 0;
+      let appliedCoupon: Coupon | null = null;
+      if (dto.couponCode?.trim()) {
+        const couponRepo = manager.getRepository(Coupon);
+        appliedCoupon = await couponRepo.findOne({
+          where: { code: dto.couponCode.trim().toUpperCase() },
+          lock: { mode: 'pessimistic_write' },
+        });
+        if (!appliedCoupon) throw new BadRequestException('Mã giảm giá không tồn tại');
+        const now = new Date();
+        if (!appliedCoupon.isActive) throw new BadRequestException('Mã giảm giá đã bị vô hiệu hóa');
+        if (now < appliedCoupon.startDate) throw new BadRequestException('Mã giảm giá chưa bắt đầu sử dụng');
+        if (now > appliedCoupon.endDate) throw new BadRequestException('Mã giảm giá đã hết hạn');
+        if (appliedCoupon.usageLimit !== null && appliedCoupon.usedCount >= appliedCoupon.usageLimit) {
+          throw new BadRequestException('Mã giảm giá đã hết lượt sử dụng');
+        }
+        if (subtotal < Number(appliedCoupon.minOrderAmount)) {
+          throw new BadRequestException(`Đơn hàng tối thiểu ${appliedCoupon.minOrderAmount}đ`);
+        }
+        discount = appliedCoupon.discountType === CouponDiscountType.PERCENTAGE
+          ? subtotal * Number(appliedCoupon.discountValue) / 100
+          : Number(appliedCoupon.discountValue);
+        if (appliedCoupon.discountType === CouponDiscountType.PERCENTAGE && appliedCoupon.maxDiscountAmount !== null) {
+          discount = Math.min(discount, Number(appliedCoupon.maxDiscountAmount));
+        }
+        discount = Math.round(Math.min(discount, subtotal));
+      }
+      const total = subtotal - discount;
  
       const productRepo = manager.getRepository(Product);
       for (const item of cartItems) {
@@ -54,6 +84,9 @@ export class OrdersService {
         phone: dto.phone,
         address: dto.address,
         totalAmount: String(total),
+        subtotalAmount: String(subtotal),
+        discountAmount: String(discount),
+        couponCode: appliedCoupon?.code ?? null,
         status: OrderStatus.PENDING,
         paymentMethod: dto.paymentMethod,
         paymentStatus: PaymentStatus.UNPAID,
@@ -81,6 +114,10 @@ export class OrdersService {
         paidAt: null,
       });
       await manager.save(Payment, payment);
+      if (appliedCoupon) {
+        appliedCoupon.usedCount += 1;
+        await manager.save(Coupon, appliedCoupon);
+      }
       await manager.getRepository(CartItem).delete({ cartId: cart.id });
  
       return this.getOneForUser(userId, savedOrder.id, manager.getRepository(Order));
@@ -178,6 +215,8 @@ export class OrdersService {
   }
  
   private serialize(order: Order) {
+    const totalAmount = Number(order.totalAmount);
+    const subtotalAmount = Number(order.subtotalAmount);
     return {
       id: order.id,
       userId: order.userId,
@@ -185,7 +224,10 @@ export class OrdersService {
       email: order.email,
       phone: order.phone,
       address: order.address,
-      totalAmount: Number(order.totalAmount),
+      totalAmount,
+      subtotalAmount: subtotalAmount > 0 ? subtotalAmount : totalAmount,
+      discountAmount: Number(order.discountAmount || 0),
+      couponCode: order.couponCode ?? null,
       status: order.status,
       paymentMethod: order.paymentMethod,
       paymentStatus: order.paymentStatus,

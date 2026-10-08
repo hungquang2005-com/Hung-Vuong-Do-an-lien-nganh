@@ -35,7 +35,7 @@ export const cartApi = {
 };
 
 export const orderApi = {
-  create: (data: { fullName: string; email: string; phone: string; address: string; paymentMethod: string; note?: string }) => api.post<Order>('/orders', data),
+  create: (data: { fullName: string; email: string; phone: string; address: string; paymentMethod: string; note?: string; couponCode?: string }) => api.post<Order>('/orders', data),
   list: () => api.get<Order[]>('/orders'),
   detail: (id: number) => api.get<Order>(`/orders/${id}`),
   adminList: () => api.get<Order[]>('/admin/orders'),
@@ -57,6 +57,7 @@ export const addressApi = {
 
 export const couponApi = {
   list: () => api.get<Coupon[]>('/coupons'),
+  validate: (code: string, orderAmount: number) => api.post<{ valid: boolean; coupon: Coupon; discountAmount: number; finalAmount: number }>('/coupons/validate', { code, orderAmount }),
 };
 
 export const paymentApi = {
@@ -69,5 +70,4 @@ export const contactApi = {
   read: (id: number) => api.post(`/contact/admin/${id}/read`),
   remove: (id: number) => api.delete(`/contact/admin/${id}`),
 };
-
 

@@ -223,6 +223,9 @@ CREATE TABLE `orders` (
   `phone` varchar(15) NOT NULL,
   `address` text NOT NULL,
   `total_amount` decimal(15,0) NOT NULL,
+  `subtotal_amount` decimal(15,0) NOT NULL DEFAULT '0',
+  `discount_amount` decimal(15,0) NOT NULL DEFAULT '0',
+  `coupon_code` varchar(50) DEFAULT NULL,
   `status` enum('PENDING','CONFIRMED','DELIVERED','CANCELLED') NOT NULL DEFAULT 'PENDING',
   `payment_method` enum('QR','CARD','CASH','PAYOS') NOT NULL,
   `payment_status` enum('UNPAID','PAID') NOT NULL DEFAULT 'UNPAID',
@@ -241,7 +244,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1,2,'Nguyễn','khiemkk3663@gmail.com','0368328669','sdksfkslka',3580000,'DELIVERED','QR','PAID','','2026-09-23 04:18:39.000000','2026-09-23 17:47:12.000000'),(2,3,'vuong','vuongvidlls@gmail.com','0327954569','sdsads',3690000,'CANCELLED','PAYOS','UNPAID','','2026-09-23 17:45:21.000000','2026-09-24 11:58:27.000000'),(3,3,'vuong','vuongvidlls@gmail.com','0327954569','dfdfgfdg',10000,'DELIVERED','PAYOS','UNPAID','','2026-09-23 17:50:59.000000','2026-09-24 11:57:52.000000'),(4,3,'vuong','vuongvidlls@gmail.com','0327954569','dslfsdlflds',10000,'PENDING','CASH','UNPAID','','2026-09-24 12:00:06.551245','2026-09-24 12:00:06.551245');
+INSERT INTO `orders` VALUES (1,2,'Nguyễn','khiemkk3663@gmail.com','0368328669','sdksfkslka',3580000,3580000,0,NULL,'DELIVERED','QR','PAID','','2026-09-23 04:18:39.000000','2026-09-23 17:47:12.000000'),(2,3,'vuong','vuongvidlls@gmail.com','0327954569','sdsads',3690000,3690000,0,NULL,'CANCELLED','PAYOS','UNPAID','','2026-09-23 17:45:21.000000','2026-09-24 11:58:27.000000'),(3,3,'vuong','vuongvidlls@gmail.com','0327954569','dfdfgfdg',10000,10000,0,NULL,'DELIVERED','PAYOS','UNPAID','','2026-09-23 17:50:59.000000','2026-09-24 11:57:52.000000'),(4,3,'vuong','vuongvidlls@gmail.com','0327954569','dslfsdlflds',10000,10000,0,NULL,'PENDING','CASH','UNPAID','','2026-09-24 12:00:06.551245','2026-09-24 12:00:06.551245');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 

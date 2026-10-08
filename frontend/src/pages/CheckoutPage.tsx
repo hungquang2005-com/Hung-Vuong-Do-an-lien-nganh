@@ -2,8 +2,8 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { formatVnd } from '../api/client';
-import { orderApi, paymentApi } from '../api/services';
-import type { Cart, PaymentMethod } from '../api/types';
+import { couponApi, orderApi, paymentApi } from '../api/services';
+import type { Cart, Coupon, PaymentMethod } from '../api/types';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 
@@ -12,6 +12,8 @@ type CheckoutForm = {
   email: string;
   phone: string;
   address: string;
+  district: string;
+  province: string;
   paymentMethod: PaymentMethod;
   note: string;
 };
@@ -29,19 +31,36 @@ export function CheckoutPage() {
     email: user?.email || '',
     phone: user?.phone || '',
     address: '',
+    district: '',
+    province: '',
     paymentMethod: 'QR',
     note: '',
   });
   const [step, setStep] = useState(loc.pathname.endsWith('/payment') ? 2 : loc.pathname.endsWith('/invoice') ? 3 : 1);
   const [busy, setBusy] = useState(false);
-  const [cardDetails, setCardDetails] = useState<CardDetails>({ holder: '', type: 'DOMESTIC', provider: 'NAPAS' });
+  const [cardDetails, setCardDetails] = useState<CardDetails>(() => {
+    try {
+      const saved = sessionStorage.getItem('giadung_checkout_card_demo');
+      return saved ? JSON.parse(saved) as CardDetails : { holder: '', type: 'DOMESTIC', provider: 'NAPAS' };
+    } catch { return { holder: '', type: 'DOMESTIC', provider: 'NAPAS' }; }
+  });
+  const [couponCode, setCouponCode] = useState(() => sessionStorage.getItem('giadung_checkout_coupon') || '');
+  const [appliedCoupon, setAppliedCoupon] = useState<{ coupon: Coupon; discountAmount: number; finalAmount: number } | null>(null);
+  const [availableCoupons, setAvailableCoupons] = useState<Coupon[]>([]);
+  const [couponBusy, setCouponBusy] = useState(() => Boolean(sessionStorage.getItem('giadung_checkout_coupon_applied')));
+  const [couponError, setCouponError] = useState('');
+  const [voucherOpen, setVoucherOpen] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [orderError, setOrderError] = useState('');
+
+  useEffect(() => { couponApi.list().then((response) => setAvailableCoupons(response.data)).catch(() => setAvailableCoupons([])); }, []);
 
   useEffect(() => {
     try {
       const raw = sessionStorage.getItem('giadung_checkout');
       if (raw) {
         const saved = JSON.parse(raw) as CheckoutForm;
-        setForm({ ...saved, paymentMethod: saved.paymentMethod === 'CASH' || saved.paymentMethod === 'CARD' ? saved.paymentMethod : 'QR' });
+        setForm({ ...saved, district: saved.district || '', province: saved.province || '', paymentMethod: saved.paymentMethod === 'CASH' || saved.paymentMethod === 'CARD' ? saved.paymentMethod : 'QR' });
       }
     } catch {}
   }, []);
@@ -49,6 +68,8 @@ export function CheckoutPage() {
   useEffect(() => {
     sessionStorage.setItem('giadung_checkout', JSON.stringify(form));
   }, [form]);
+
+  useEffect(() => { sessionStorage.setItem('giadung_checkout_card_demo', JSON.stringify(cardDetails)); }, [cardDetails]);
 
   useEffect(() => {
     if (!cart?.items?.length) nav('/cart');
@@ -70,6 +91,72 @@ export function CheckoutPage() {
     go(2);
   };
 
+  const applyCoupon = async (requestedCode = couponCode) => {
+    const code = requestedCode.trim().toUpperCase();
+    if (!code || !cart) {
+      setCouponError('Vui lòng nhập hoặc chọn mã giảm giá.');
+      return;
+    }
+    setCouponBusy(true);
+    setCouponError('');
+    try {
+      const { data } = await couponApi.validate(code, cart.total);
+      setAppliedCoupon({ coupon: data.coupon, discountAmount: data.discountAmount, finalAmount: data.finalAmount });
+      setCouponCode(data.coupon.code);
+      sessionStorage.setItem('giadung_checkout_coupon', data.coupon.code);
+      sessionStorage.setItem('giadung_checkout_coupon_applied', data.coupon.code);
+      setVoucherOpen(false);
+    } catch (error) {
+      setAppliedCoupon(null);
+      sessionStorage.removeItem('giadung_checkout_coupon_applied');
+      setCouponError((error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Không thể áp dụng mã giảm giá.');
+    } finally {
+      setCouponBusy(false);
+    }
+  };
+
+  const chooseCoupon = (code: string) => {
+    setCouponCode(code);
+    void applyCoupon(code);
+  };
+
+  const removeCoupon = () => {
+    setCouponCode('');
+    setAppliedCoupon(null);
+    setCouponError('');
+    sessionStorage.removeItem('giadung_checkout_coupon');
+    sessionStorage.removeItem('giadung_checkout_coupon_applied');
+  };
+
+  const updateCouponCode = (code: string) => {
+    setCouponCode(code);
+    setAppliedCoupon(null);
+    setCouponError('');
+    sessionStorage.setItem('giadung_checkout_coupon', code);
+    sessionStorage.removeItem('giadung_checkout_coupon_applied');
+  };
+
+  useEffect(() => {
+    const savedCode = sessionStorage.getItem('giadung_checkout_coupon_applied');
+    if (!savedCode || !cart) return;
+    let active = true;
+    setCouponBusy(true);
+    couponApi.validate(savedCode, cart.total).then(({ data }) => {
+      if (!active) return;
+      setAppliedCoupon({ coupon: data.coupon, discountAmount: data.discountAmount, finalAmount: data.finalAmount });
+      setCouponCode(data.coupon.code);
+    }).catch(() => {
+      if (!active) return;
+      sessionStorage.removeItem('giadung_checkout_coupon_applied');
+      setAppliedCoupon(null);
+    }).finally(() => {
+      if (active) setCouponBusy(false);
+    });
+    return () => { active = false; };
+  }, [cart?.total]);
+
+  const deliveryAddress = [form.address.trim(), form.district.trim(), form.province.trim()].filter(Boolean).join(', ');
+
   const nextPay = (event: FormEvent) => {
     event.preventDefault();
     go(3);
@@ -78,10 +165,22 @@ export function CheckoutPage() {
   const confirm = async (event: FormEvent) => {
     event.preventDefault();
     setBusy(true);
+    setOrderError('');
     try {
-      const { data: order } = await orderApi.create(form);
+      const { data: order } = await orderApi.create({
+        fullName: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        address: deliveryAddress,
+        paymentMethod: form.paymentMethod,
+        note: form.note,
+        couponCode: appliedCoupon?.coupon.code,
+      });
       await refresh();
       sessionStorage.removeItem('giadung_checkout');
+      sessionStorage.removeItem('giadung_checkout_card_demo');
+      sessionStorage.removeItem('giadung_checkout_coupon');
+      sessionStorage.removeItem('giadung_checkout_coupon_applied');
 
       if (form.paymentMethod === 'QR' || form.paymentMethod === 'PAYOS') {
         const { data } = await paymentApi.createPayOSPaymentLink(order.id);
@@ -90,6 +189,8 @@ export function CheckoutPage() {
       }
 
       nav(`/checkout/success/${order.id}`, { replace: true });
+    } catch (error) {
+      setOrderError((error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Chưa thể tạo đơn hàng. Vui lòng kiểm tra lại thông tin và thử lại.');
     } finally {
       setBusy(false);
     }
@@ -110,21 +211,25 @@ export function CheckoutPage() {
             <Step active={step >= 3} icon="fa-file-invoice" text="Xác nhận" />
           </div>
           <div className="checkout-section-intro">
-            <h2 className="checkout-title"><i className="fa-solid fa-location-dot" /> Địa chỉ nhận hàng</h2>
-            <p>Vui lòng điền thông tin người nhận và địa chỉ giao hàng có thể nhận bưu kiện.</p>
+            <h2 className="checkout-title"><i className="fa-solid fa-user" /> Thông tin người mua</h2>
+            <p>Để tiếp tục đặt hàng, vui lòng nhập thông tin người nhận bên dưới.</p>
           </div>
-          <div className="form-grid">
+          <div className="form-grid checkout-info-grid">
             <Field label="Họ và tên người nhận" hint="Tên người nhận hàng" autoComplete="name" value={form.fullName} set={(value) => update('fullName', value)} required />
             <Field label="Số điện thoại" hint="Ví dụ: 0901 234 567" autoComplete="tel" value={form.phone} set={(value) => update('phone', value)} type="tel" required />
             <Field label="Email nhận xác nhận đơn" hint="Bạn sẽ nhận thông tin đơn hàng qua email này" autoComplete="email" value={form.email} set={(value) => update('email', value)} type="email" required full />
-            <Field label="Địa chỉ giao hàng" hint="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố" autoComplete="street-address" value={form.address} set={(value) => update('address', value)} textarea required full />
+            <Field label="Địa chỉ" hint="Số nhà, tên đường, phường/xã" autoComplete="street-address" value={form.address} set={(value) => update('address', value)} required full />
+            <Field label="Quận / Huyện" autoComplete="address-level2" value={form.district} set={(value) => update('district', value)} required />
+            <Field label="Tỉnh / Thành phố" autoComplete="address-level1" value={form.province} set={(value) => update('province', value)} required />
             <Field label="Ghi chú cho người giao hàng" hint="Không bắt buộc · Ví dụ: gọi trước khi giao" value={form.note} set={(value) => update('note', value)} textarea full />
           </div>
+          {orderError && <div className="checkout-order-error" role="alert">{orderError}</div>}
+          <label className="checkout-terms"><input type="checkbox" checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} required /><span>Tôi đã đọc và đồng ý với các điều kiện giao dịch chung của website.</span></label>
           <div className="actions">
             <button className="btn btn-primary">Tiếp tục thanh toán <i className="fa-solid fa-arrow-right" /></button>
           </div>
         </form>
-        <Summary cart={cart} />
+        <Summary cart={cart} couponCode={couponCode} setCouponCode={updateCouponCode} appliedCoupon={appliedCoupon} availableCoupons={availableCoupons} couponBusy={couponBusy} couponError={couponError} voucherOpen={voucherOpen} setVoucherOpen={setVoucherOpen} onApplyCoupon={() => applyCoupon()} onChooseCoupon={chooseCoupon} onRemoveCoupon={removeCoupon} />
       </section>
     </>}
 
@@ -207,7 +312,7 @@ export function CheckoutPage() {
             Quay lại
           </button>
         </form>
-        <Summary cart={cart} payment customer={form} />
+        <Summary cart={cart} payment customer={{ ...form, address: deliveryAddress }} couponCode={couponCode} setCouponCode={updateCouponCode} appliedCoupon={appliedCoupon} availableCoupons={availableCoupons} couponBusy={couponBusy} couponError={couponError} voucherOpen={voucherOpen} setVoucherOpen={setVoucherOpen} onApplyCoupon={() => applyCoupon()} onChooseCoupon={chooseCoupon} onRemoveCoupon={removeCoupon} />
       </section>
     </>}
 
@@ -225,8 +330,9 @@ export function CheckoutPage() {
             <Info label="Họ và tên" value={form.fullName} />
             <Info label="Email" value={form.email} />
             <Info label="Số điện thoại" value={form.phone} />
-            <Info label="Địa chỉ giao hàng" value={form.address} />
+            <Info label="Địa chỉ giao hàng" value={deliveryAddress} />
             <Info label="Ghi chú giao hàng" value={form.note || 'Không có'} />
+            {appliedCoupon && <Info label="Mã giảm giá" value={`${appliedCoupon.coupon.code} · giảm ${formatVnd(appliedCoupon.discountAmount)}`} />}
           </div>
         </div>
         <div className="invoice-section">
@@ -256,8 +362,9 @@ export function CheckoutPage() {
           <div className="invoice-total-box">
             <div className="invoice-total-line"><span>Tạm tính ({cart.itemCount} sản phẩm)</span><strong>{formatVnd(cart.total)}</strong></div>
             <div className="invoice-total-line"><span>Phí giao hàng</span><strong>Miễn phí</strong></div>
+            {appliedCoupon && <div className="invoice-total-line invoice-discount-line"><span>Voucher {appliedCoupon.coupon.code}</span><strong>−{formatVnd(appliedCoupon.discountAmount)}</strong></div>}
             <div className="invoice-total-label">Tổng thanh toán</div>
-            <div className="invoice-total-amount">{formatVnd(cart.total)}</div>
+            <div className="invoice-total-amount">{formatVnd(appliedCoupon?.finalAmount ?? cart.total)}</div>
             <div className="payment-method-box">
               <div style={{ fontSize: '.9rem', color: 'var(--muted)' }}>Phương thức thanh toán</div>
               <div style={{ fontWeight: 600, marginTop: '.5rem' }}>{form.paymentMethod === 'CARD' ? `Mô phỏng ${cardDetails.type === 'DOMESTIC' ? 'thẻ nội địa' : 'thẻ quốc tế'} · ${cardDetails.provider} · ${cardDetails.holder}` : paymentLabel(form.paymentMethod)}</div>
@@ -266,6 +373,7 @@ export function CheckoutPage() {
           </div>
         </div>
         <p className="invoice-disclaimer">Hóa đơn này là thông tin xác nhận đơn hàng, không thay thế hóa đơn VAT.</p>
+        {orderError && <div className="checkout-order-error" role="alert">{orderError}</div>}
         <div className="actions">
           <button type="button" className="btn-back invoice-print-button" onClick={() => window.print()}><i className="fa-solid fa-print" /> In hóa đơn</button>
           <button className="btn-confirm" disabled={busy}><i className="fa-solid fa-check" /> {busy ? 'Đang xác nhận...' : 'Xác nhận đơn hàng'}</button>
@@ -298,12 +406,47 @@ function Info({ label, value }: { label: string; value: string }) {
   return <div className="invoice-item"><div className="invoice-item-label">{label}</div><div className="invoice-item-value">{value}</div></div>;
 }
 
-function Summary({ cart, payment = false, customer }: { cart: Cart; payment?: boolean; customer?: CheckoutForm }) {
+function Summary({ cart, payment = false, customer, couponCode, setCouponCode, appliedCoupon, availableCoupons, couponBusy, couponError, voucherOpen, setVoucherOpen, onApplyCoupon, onChooseCoupon, onRemoveCoupon }: {
+  cart: Cart;
+  payment?: boolean;
+  customer?: CheckoutForm;
+  couponCode: string;
+  setCouponCode: (value: string) => void;
+  appliedCoupon: { coupon: Coupon; discountAmount: number; finalAmount: number } | null;
+  availableCoupons: Coupon[];
+  couponBusy: boolean;
+  couponError: string;
+  voucherOpen: boolean;
+  setVoucherOpen: (open: boolean) => void;
+  onApplyCoupon: () => void;
+  onChooseCoupon: (code: string) => void;
+  onRemoveCoupon: () => void;
+}) {
+  const now = Date.now();
+  const eligibleCoupons = availableCoupons.filter((coupon) => coupon.isActive && new Date(coupon.startDate).getTime() <= now && new Date(coupon.endDate).getTime() >= now && (coupon.usageLimit === null || coupon.usedCount < coupon.usageLimit));
+  const couponDescription = (coupon: Coupon) => `${coupon.description ? `${coupon.description} · ` : ''}${coupon.discountType === 'percentage' ? `Giảm ${coupon.discountValue}%` : `Giảm ${formatVnd(Number(coupon.discountValue))}`} · Đơn tối thiểu ${formatVnd(Number(coupon.minOrderAmount))}`;
   return <aside className="summary-panel">
-    <h2 className="summary-title"><i className="fa-solid fa-receipt" /> Tóm tắt đơn</h2>
-    <div className="summary-row"><span>Số lượng</span><strong>{cart.itemCount}</strong></div>
-    <div className="summary-row"><span>Giao hàng</span><strong>0 ₫</strong></div>
-    <div className="summary-row summary-total"><span>Tổng cộng</span><strong>{formatVnd(cart.total)}</strong></div>
+    <h2 className="summary-title"><i className="fa-solid fa-receipt" /> Tổng tiền đơn hàng</h2>
+    <div className="voucher-panel">
+      <div className="voucher-entry">
+        <input aria-label="Mã voucher" placeholder="Nhập mã voucher" value={couponCode} onChange={(event) => setCouponCode(event.target.value.toUpperCase())} />
+        <button type="button" className="voucher-choose" onClick={() => setVoucherOpen(!voucherOpen)}><i className="fa-solid fa-ticket" /> Chọn mã</button>
+      </div>
+      <button type="button" className="voucher-apply" onClick={onApplyCoupon} disabled={couponBusy || !couponCode.trim()}>{couponBusy ? 'Đang kiểm tra…' : 'Áp dụng mã'}</button>
+      {couponError && <small className="voucher-error" role="alert">{couponError}</small>}
+      {appliedCoupon && <div className="voucher-applied"><i className="fa-solid fa-circle-check" /> Đã áp dụng <strong>{appliedCoupon.coupon.code}</strong><button type="button" aria-label="Gỡ mã giảm giá" onClick={onRemoveCoupon}>Gỡ</button></div>}
+      {voucherOpen && <div className="voucher-picker" role="dialog" aria-label="Chọn mã giảm giá">
+        <div className="voucher-picker-head"><strong>Mã giảm giá khả dụng</strong><button type="button" aria-label="Đóng danh sách mã" onClick={() => setVoucherOpen(false)}>×</button></div>
+        {eligibleCoupons.length ? eligibleCoupons.map((coupon) => {
+          const meetsMinimum = cart.total >= Number(coupon.minOrderAmount);
+          return <button type="button" className="voucher-option" key={coupon.id} disabled={!meetsMinimum} onClick={() => onChooseCoupon(coupon.code)}><span><strong>{coupon.code}</strong><small>{couponDescription(coupon)}</small>{!meetsMinimum && <small className="voucher-option-hint">Cần thêm {formatVnd(Number(coupon.minOrderAmount) - cart.total)} để sử dụng</small>}</span><i className="fa-solid fa-chevron-right" /></button>;
+        }) : <p className="voucher-empty">Hiện chưa có mã giảm giá khả dụng.</p>}
+      </div>}
+    </div>
+    <div className="summary-row"><span>Tạm tính ({cart.itemCount} sản phẩm)</span><strong>{formatVnd(cart.total)}</strong></div>
+    <div className="summary-row"><span>Giao hàng</span><strong>Miễn phí</strong></div>
+    <div className="summary-row"><span>Giảm giá voucher</span><strong className="summary-discount">−{formatVnd(appliedCoupon?.discountAmount ?? 0)}</strong></div>
+    <div className="summary-row summary-total"><span>Thành tiền</span><strong>{formatVnd(appliedCoupon?.finalAmount ?? cart.total)}</strong></div>
     {payment && customer && <div className="customer-box"><strong>Người nhận</strong><br />{customer.fullName}<br />{customer.phone}<br />{customer.address}</div>}
     <div className="secure-note"><i className="fa-solid fa-lock" /> Thông tin được mã hóa khi xử lý thanh toán</div>
   </aside>;

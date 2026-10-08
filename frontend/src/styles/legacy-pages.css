@@ -975,6 +975,7 @@
     .checkout-step { border-radius: 10px; }
     .summary-panel { position: sticky; top: 105px; padding: 26px; }
     .summary-title { margin-top: 0; }
+    .summary-panel .summary-title { padding:12px 14px; border-radius:8px; background:#f1f4f2; font-size:20px; }
     .summary-row { gap: 16px; line-height: 1.45; }
     .customer-box { overflow-wrap: anywhere; line-height: 1.7; }
     .invoice-container { width: min(100%, 980px); max-width: none; padding: clamp(20px, 4vw, 48px); }
@@ -995,6 +996,40 @@
     .invoice-items-table td { border-bottom: 1px solid var(--line); }
     .invoice-items-table th:first-child { width: 42%; }
     .invoice-product-meta { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
+    .checkout-wrap { grid-template-columns:minmax(0,1fr) minmax(350px,.9fr); gap:24px; }
+    .checkout-info-grid { grid-template-columns:minmax(0,1fr); gap:13px; }
+    .checkout-info-grid .field { display:grid; grid-template-columns:140px minmax(0,1fr); align-items:center; gap:0 14px; }
+    .checkout-info-grid .field.full { grid-column:1; }
+    .checkout-info-grid .field label { margin:0; }
+    .checkout-info-grid .field-hint { grid-column:2; }
+    .checkout-section-intro { padding:14px 16px; background:#f1f4f2; border-radius:8px; }
+    .checkout-section-intro .checkout-title { margin:0 0 5px; font-size:20px; }
+    .checkout-terms { display:flex; align-items:flex-start; gap:10px; margin-top:22px; color:var(--ink); font-weight:650; line-height:1.5; cursor:pointer; }
+    .checkout-terms input { width:17px; height:17px; margin:2px 0 0; accent-color:var(--brand); flex:none; }
+    .checkout-order-error { margin-top:16px; padding:12px 14px; border:1px solid rgba(184,50,50,.25); border-radius:8px; background:#fff5f4; color:var(--danger); }
+    .voucher-panel { position:relative; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; margin:16px 0 22px; padding:12px; border-radius:10px; background:#f1f4f2; }
+    .voucher-entry { display:flex; min-width:0; }
+    .voucher-entry input { width:100%; min-width:0; height:44px; padding:0 12px; border:1px solid var(--line); border-right:0; border-radius:8px 0 0 8px; background:#fff; color:var(--ink); font:inherit; }
+    .voucher-entry input:focus { outline:0; border-color:var(--brand); box-shadow:0 0 0 3px rgba(15,79,63,.08); }
+    .voucher-choose,.voucher-apply { min-height:44px; padding:0 12px; border:0; border-radius:0 8px 8px 0; background:var(--brand); color:#fff; font-weight:750; white-space:nowrap; cursor:pointer; }
+    .voucher-choose { display:inline-flex; align-items:center; gap:7px; }
+    .voucher-apply { grid-column:1 / -1; border-radius:8px; background:#174f3f; }
+    .voucher-apply:disabled { opacity:.55; cursor:not-allowed; }
+    .voucher-error { grid-column:1 / -1; color:var(--danger); line-height:1.45; }
+    .voucher-applied { grid-column:1 / -1; display:flex; align-items:center; gap:7px; color:var(--success); font-size:13px; }
+    .voucher-applied button { margin-left:auto; padding:4px 8px; border:0; background:transparent; color:var(--danger); font-weight:700; cursor:pointer; }
+    .voucher-picker { position:absolute; z-index:20; top:calc(100% - 14px); right:0; left:0; max-height:320px; overflow:auto; padding:10px; border:1px solid var(--line); border-radius:10px; background:#fff; box-shadow:0 18px 45px rgba(24,31,28,.18); }
+    .voucher-picker-head { display:flex; justify-content:space-between; align-items:center; padding:6px 4px 10px; border-bottom:1px solid var(--line); }
+    .voucher-picker-head button { border:0; background:transparent; color:var(--muted); font-size:22px; cursor:pointer; }
+    .voucher-option { display:flex; justify-content:space-between; align-items:center; gap:12px; width:100%; padding:12px 6px; border:0; border-bottom:1px solid var(--line); background:#fff; color:var(--ink); text-align:left; cursor:pointer; }
+    .voucher-option > span { display:grid; gap:4px; }
+    .voucher-option small,.voucher-empty { color:var(--muted); font-size:12px; line-height:1.45; }
+    .voucher-option-hint { color:#9b6900 !important; }
+    .voucher-option:disabled { opacity:.62; cursor:not-allowed; }
+    .voucher-option:not(:disabled):hover { background:#f7faf8; }
+    .voucher-empty { margin:0; padding:14px 4px; }
+    .summary-discount { color:#b32323; }
+    .summary-total { align-items:flex-start; }
     .invoice-total-box { width: min(100%, 390px); background: #f7f9f7; border-color: var(--line); border-radius: 12px; }
     .invoice-total-line { display: flex; justify-content: space-between; gap: 18px; margin: 9px 0; color: var(--muted); font-size: 14px; }
     .invoice-total-line strong { color: var(--ink); white-space: nowrap; }
@@ -1015,6 +1050,7 @@
       .invoice-items-table { font-size: 13px; }
       .invoice-items-table th, .invoice-items-table td { padding: 10px 6px; }
       .invoice-items-table th:first-child { width: 36%; }
+      .checkout-info-grid .field { grid-template-columns:120px minmax(0,1fr); gap:0 10px; }
       .card-demo-form { grid-template-columns:1fr; }
       .card-demo-form .field.full { grid-column:auto; }
     }
@@ -1024,6 +1060,8 @@
       .invoice-brand-row { align-items: flex-start; flex-direction: column; }
       .invoice-total { justify-content: stretch; }
       .invoice-total-box { min-width: 0; }
+      .checkout-info-grid .field { grid-template-columns:1fr; gap:7px; }
+      .checkout-info-grid .field-hint { grid-column:1; }
     }
     @media print {
       @page { size: A4; margin: 14mm; }
@@ -1827,5 +1865,39 @@
 
     .btn-continue-shopping:hover {
       background: rgba(0, 212, 255, 0.2);
+    }
+
+    /* Final checkout and product filter alignment overrides */
+    .checkout-card .checkout-info-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:16px; }
+    .checkout-card .checkout-info-grid > .field,
+    .checkout-card .checkout-info-grid > .field.full { grid-column:1; display:grid; grid-template-columns:minmax(150px, .34fr) minmax(0, 1fr); align-items:center; gap:0 18px; min-width:0; }
+    .checkout-card .checkout-info-grid > .field label { margin:0; }
+    .checkout-card .checkout-info-grid > .field .form-input,
+    .checkout-card .checkout-info-grid > .field .form-select { min-width:0; width:100%; }
+    .checkout-card .checkout-info-grid > .field .field-hint { grid-column:2; margin-top:5px; }
+    .checkout-card .checkout-info-grid > .field textarea.form-input { min-height:82px; }
+    .checkout-card .checkout-terms { align-items:center; }
+    .checkout-wrap { grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr); gap:26px; }
+    .checkout-card,.summary-panel { min-width:0; }
+    .summary-panel { padding:24px; }
+    .summary-panel .summary-title { margin:0 0 16px; }
+    .shop-content .shop-toolbar { display:grid; grid-template-columns:minmax(170px,220px) minmax(0,1fr); align-items:center; gap:20px; }
+    .shop-content .product-filter-controls { display:grid; grid-template-columns:minmax(0,1fr) minmax(160px,220px); align-items:end; gap:14px; min-width:0; width:100%; }
+    .shop-content .price-filter,.shop-content .product-sort { display:grid; grid-template-columns:minmax(0,1fr); gap:7px; min-width:0; }
+    .shop-content .price-filter { grid-column:1; grid-row:1; width:100%; max-width:none; }
+    .shop-content .price-range-select,.shop-content .product-sort select { width:100%; min-width:0; }
+    .shop-content .price-filter label,.shop-content .product-sort label { color:var(--muted); font-size:13px; font-weight:700; }
+    .shop-content .product-sort { grid-column:2; grid-row:1; }
+    @media (max-width: 920px) {
+      .checkout-wrap { grid-template-columns:minmax(0,1fr); }
+      .shop-content .shop-toolbar { grid-template-columns:minmax(0,1fr); gap:12px; }
+      .shop-content .product-filter-controls { grid-template-columns:minmax(0,1fr) minmax(160px,220px); }
+    }
+    @media (max-width: 620px) {
+      .checkout-card .checkout-info-grid > .field,
+      .checkout-card .checkout-info-grid > .field.full { grid-template-columns:minmax(0,1fr); gap:7px; }
+      .checkout-card .checkout-info-grid > .field .field-hint { grid-column:1; }
+      .shop-content .product-filter-controls { grid-template-columns:minmax(0,1fr); }
+      .shop-content .price-filter,.shop-content .product-sort { grid-column:1; grid-row:auto; }
     }
   

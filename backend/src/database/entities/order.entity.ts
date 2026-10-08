@@ -28,6 +28,15 @@ export class Order {
   @Column({ name: 'total_amount', type: 'decimal', precision: 15, scale: 0 })
   totalAmount: string;
 
+  @Column({ name: 'subtotal_amount', type: 'decimal', precision: 15, scale: 0, default: 0 })
+  subtotalAmount: string;
+
+  @Column({ name: 'discount_amount', type: 'decimal', precision: 15, scale: 0, default: 0 })
+  discountAmount: string;
+
+  @Column({ name: 'coupon_code', type: 'varchar', length: 50, nullable: true })
+  couponCode: string | null;
+
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.PENDING })
   status: OrderStatus;
 
