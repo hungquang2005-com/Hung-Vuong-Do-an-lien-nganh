@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="legacy users schema upgrades once using ADD only, and covers every User column" time="0.006678" classname="test"/>
+	<testcase name="partially upgraded schema adds only missing fields, and a failed ALTER never reports success" time="0.001542" classname="test"/>
+	<testsuite name="QA-AUTH: real HTTP authentication, DTOs, roles and OTP with isolated repositories" time="1.795667" disabled="0" errors="0" tests="9" failures="0" skipped="0" hostname="LAPTOP-L2IESHJ4">
+		<testcase name="QA-A01 registration rejects invalid, empty and overlong data and role spoofing" time="0.157742" classname="test"/>
+		<testcase name="QA-A02 registration hashes password, forces USER and rejects duplicates" time="0.240335" classname="test"/>
+		<testcase name="QA-A03 username/email login succeeds; wrong password and unknown account return 401" time="0.279128" classname="test"/>
+		<testcase name="QA-A04 JWT missing, invalid, expired and wrong signature cannot read profile" time="0.024135" classname="test"/>
+		<testcase name="QA-A05 all admin dashboard routes enforce anonymous 401, USER 403 and ADMIN 200" time="0.030649" classname="test"/>
+		<testcase name="QA-A06 forgot-password replaces old OTP, stores only hash and uses five-minute expiry" time="0.245016" classname="test"/>
+		<testcase name="QA-A07 wrong, malformed, expired and unverified OTP cannot reset password" time="0.194974" classname="test"/>
+		<testcase name="QA-A08 verified OTP resets password exactly once and invalidates previous credentials" time="0.420972" classname="test"/>
+		<testcase name="QA-A09 failed mail delivery removes pending token and exposes no OTP" time="0.087091" classname="test"/>
+	</testsuite>
+	<testcase name="changePassword checks confirmation and current password before saving" time="0.161509" classname="test"/>
+	<testcase name="merged profile endpoint validates fields and saves personal data without losing avatar or payment profile" time="0.010400" classname="test"/>
+	<!-- tests 14 -->
+	<!-- suites 0 -->
+	<!-- pass 14 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 18655.337 -->
+</testsuites>

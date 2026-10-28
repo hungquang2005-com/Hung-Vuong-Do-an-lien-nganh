@@ -8,3 +8,9 @@ coverage/
 *.log
 .vscode/
 .idea/
+artifacts/
+ảnh/
+anh/
+tools/
+__pycache__/
+*.pyc

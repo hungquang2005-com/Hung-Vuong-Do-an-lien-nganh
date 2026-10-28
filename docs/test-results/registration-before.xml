@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="QA-AUTH: real HTTP authentication, DTOs, roles and OTP with isolated repositories" time="1.160019" disabled="0" errors="0" tests="9" failures="2" skipped="0" hostname="LAPTOP-L2IESHJ4">
+		<testcase name="QA-A01 registration rejects invalid, empty and overlong data and role spoofing" time="0.149311" classname="test" failure="Expected values to be strictly equal:201 !== 400">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:201 !== 400">
+Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+201 !== 400
+
+    at async TestContext.&lt;anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\auth\auth.http.spec.ts:102:5) {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  201 !== 400
+  
+      at TestContext.&lt;anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\auth\auth.http.spec.ts:62:14)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async Test.run (node:internal/test_runner/test:888:9)
+      at async TestContext.&lt;anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\auth\auth.http.spec.ts:59:3)
+      at async Test.run (node:internal/test_runner/test:888:9)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:280:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 400,
+    operator: 'strictEqual'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="QA-A02 registration hashes password, forces USER and rejects duplicates" time="0.005049" classname="test" failure="Expected values to be strictly equal:409 !== 201">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:409 !== 201">
+Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+409 !== 201
+
+    at async TestContext.&lt;anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\auth\auth.http.spec.ts:109:5) {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  409 !== 201
+  
+      at TestContext.&lt;anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\auth\auth.http.spec.ts:68:12)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async Test.run (node:internal/test_runner/test:888:9)
+      at async TestContext.&lt;anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\auth\auth.http.spec.ts:66:3)
+      at async Test.run (node:internal/test_runner/test:888:9)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:280:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 201,
+    operator: 'strictEqual'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="QA-A03 username/email login succeeds; wrong password and unknown account return 401" time="0.208621" classname="test"/>
+		<testcase name="QA-A04 JWT missing, invalid, expired and wrong signature cannot read profile" time="0.015987" classname="test"/>
+		<testcase name="QA-A05 all admin dashboard routes enforce anonymous 401, USER 403 and ADMIN 200" time="0.019231" classname="test"/>
+		<testcase name="QA-A06 forgot-password replaces old OTP, stores only hash and uses five-minute expiry" time="0.188317" classname="test"/>
+		<testcase name="QA-A07 wrong, malformed, expired and unverified OTP cannot reset password" time="0.132375" classname="test"/>
+		<testcase name="QA-A08 verified OTP resets password exactly once and invalidates previous credentials" time="0.327576" classname="test"/>
+		<testcase name="QA-A09 failed mail delivery removes pending token and exposes no OTP" time="0.064612" classname="test"/>
+	</testsuite>
+	<!-- tests 10 -->
+	<!-- suites 0 -->
+	<!-- pass 7 -->
+	<!-- fail 3 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 6074.8717 -->
+</testsuites>

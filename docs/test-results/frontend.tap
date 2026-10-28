@@ -1,0 +1,76 @@
+TAP version 13
+# (node:32512) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:32512) [MODULE_TYPELESS_PACKAGE_JSON] Warning: file:///C:/xampp/htdocs/gia-dung-react-nest/frontend/src/api/chat-stream.ts parsed as an ES module because module syntax was detected; to avoid the performance penalty of syntax detection, add "type": "module" to C:\\xampp\\htdocs\\gia-dung-react-nest\\frontend\\package.json
+# (node:32512) ExperimentalWarning: The MockTimers API is an experimental feature and might change at any time
+# Subtest: SSE displays a delta before the final result and preserves new action metadata
+ok 1 - SSE displays a delta before the final result and preserves new action metadata
+  ---
+  duration_ms: 27.3012
+  ...
+# Subtest: arbitrary UTF-8 byte boundaries preserve Vietnamese, emoji, Markdown and SSE CRLF frames
+ok 2 - arbitrary UTF-8 byte boundaries preserve Vietnamese, emoji, Markdown and SSE CRLF frames
+  ---
+  duration_ms: 1.9447
+  ...
+# Subtest: structured action validation errors and broken streams never appear as success
+ok 3 - structured action validation errors and broken streams never appear as success
+  ---
+  duration_ms: 2.7679
+  ...
+# Subtest: real chunk queue preserves every character while displaying small groups
+ok 4 - real chunk queue preserves every character while displaying small groups
+  ---
+  duration_ms: 3.4105
+  ...
+# Subtest: aborting a response discards its queue and cannot overwrite the next response
+ok 5 - aborting a response discards its queue and cannot overwrite the next response
+  ---
+  duration_ms: 0.5825
+  ...
+# Subtest: cancel during unmount resolves queue completion and ignores future chunks
+ok 6 - cancel during unmount resolves queue completion and ignores future chunks
+  ---
+  duration_ms: 0.4495
+  ...
+# (node:19976) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-F01 real product price renders sale, original price, savings and ordinary zero price
+ok 7 - QA-F01 real product price renders sale, original price, savings and ordinary zero price
+  ---
+  duration_ms: 31.4778
+  ...
+# Subtest: QA-F02 cart loading, empty checkout-disabled and populated totals render correctly
+ok 8 - QA-F02 cart loading, empty checkout-disabled and populated totals render correctly
+  ---
+  duration_ms: 10.4901
+  ...
+# Subtest: QA-F03 admin guard renders loading and exposes protected outlet only to ADMIN
+ok 9 - QA-F03 admin guard renders loading and exposes protected outlet only to ADMIN
+  ---
+  duration_ms: 7.0636
+  ...
+# Subtest: QA-F04 login and registration render required fields, email constraint and concealed passwords
+ok 10 - QA-F04 login and registration render required fields, email constraint and concealed passwords
+  ---
+  duration_ms: 4.0995
+  ...
+# Subtest: QA-F05 product rating handles empty and rated states with accessible labels
+ok 11 - QA-F05 product rating handles empty and rated states with accessible labels
+  ---
+  duration_ms: 6.2203
+  ...
+# Subtest: QA-F06 real API adapters retain payload, query filters, current JWT and propagate failures
+ok 12 - QA-F06 real API adapters retain payload, query filters, current JWT and propagate failures
+  ---
+  duration_ms: 5.9542
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 745.2909

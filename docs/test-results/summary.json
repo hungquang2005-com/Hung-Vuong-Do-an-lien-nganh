@@ -1,0 +1,39 @@
+{
+  "node": "v22.8.0",
+  "npm": "10.8.2",
+  "executedAt": "2026-10-26T21:00:56.509Z",
+  "runs": [
+    {
+      "name": "backend",
+      "command": "node --test --test-concurrency=1 --test-reporter=tap --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=C:\\xampp\\htdocs\\gia-dung-react-nest\\docs\\test-results\\backend.xml --test-reporter=file:///C:/xampp/htdocs/gia-dung-react-nest/tests/test-json-reporter.cjs --test-reporter-destination=C:\\xampp\\htdocs\\gia-dung-react-nest\\docs\\test-results\\backend.jsonl -r ts-node/register C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\addresses.service.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\auth-schema.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\auth.http.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\auth.service.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\chat.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\checkout.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\favorites.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\products.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\promotions.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\reviews.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\shopping.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\user-actions.spec.ts",
+      "exitCode": 0,
+      "tests": 106,
+      "pass": 106,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "name": "frontend",
+      "command": "node --test --test-concurrency=1 --test-reporter=tap --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=C:\\xampp\\htdocs\\gia-dung-react-nest\\docs\\test-results\\frontend.xml --test-reporter=file:///C:/xampp/htdocs/gia-dung-react-nest/tests/test-json-reporter.cjs --test-reporter-destination=C:\\xampp\\htdocs\\gia-dung-react-nest\\docs\\test-results\\frontend.jsonl --experimental-strip-types C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\frontend\\chat-stream.test.mjs C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\frontend\\ui.test.mjs",
+      "exitCode": 0,
+      "tests": 12,
+      "pass": 12,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    }
+  ],
+  "builds": [
+    {
+      "name": "backend",
+      "command": "npm run build",
+      "exitCode": 0
+    },
+    {
+      "name": "frontend",
+      "command": "npm run build",
+      "exitCode": 0
+    }
+  ]
+}

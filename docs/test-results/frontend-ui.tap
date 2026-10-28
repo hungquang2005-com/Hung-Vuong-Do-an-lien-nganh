@@ -1,0 +1,42 @@
+TAP version 13
+# (node:24364) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-F01 real product price renders sale, original price, savings and ordinary zero price
+ok 1 - QA-F01 real product price renders sale, original price, savings and ordinary zero price
+  ---
+  duration_ms: 41.4313
+  ...
+# Subtest: QA-F02 cart loading, empty checkout-disabled and populated totals render correctly
+ok 2 - QA-F02 cart loading, empty checkout-disabled and populated totals render correctly
+  ---
+  duration_ms: 14.7577
+  ...
+# Subtest: QA-F03 admin guard renders loading and exposes protected outlet only to ADMIN
+ok 3 - QA-F03 admin guard renders loading and exposes protected outlet only to ADMIN
+  ---
+  duration_ms: 6.7738
+  ...
+# Subtest: QA-F04 login and registration render required fields, email constraint and concealed passwords
+ok 4 - QA-F04 login and registration render required fields, email constraint and concealed passwords
+  ---
+  duration_ms: 5.7724
+  ...
+# Subtest: QA-F05 product rating handles empty and rated states with accessible labels
+ok 5 - QA-F05 product rating handles empty and rated states with accessible labels
+  ---
+  duration_ms: 6.989
+  ...
+# Subtest: QA-F06 real API adapters retain payload, query filters, current JWT and propagate failures
+ok 6 - QA-F06 real API adapters retain payload, query filters, current JWT and propagate failures
+  ---
+  duration_ms: 7.7971
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 647.1492

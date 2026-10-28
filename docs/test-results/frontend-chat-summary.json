@@ -1,0 +1,18 @@
+{
+  "node": "v22.8.0",
+  "npm": "10.8.2",
+  "executedAt": "2026-10-26T21:00:47.335Z",
+  "runs": [
+    {
+      "name": "frontend",
+      "command": "node --test --test-concurrency=1 --test-reporter=tap --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=C:\\xampp\\htdocs\\gia-dung-react-nest\\docs\\test-results\\frontend-chat.xml --test-reporter=file:///C:/xampp/htdocs/gia-dung-react-nest/tests/test-json-reporter.cjs --test-reporter-destination=C:\\xampp\\htdocs\\gia-dung-react-nest\\docs\\test-results\\frontend-chat.jsonl --experimental-strip-types C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\frontend\\chat-stream.test.mjs",
+      "exitCode": 0,
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    }
+  ],
+  "builds": []
+}
