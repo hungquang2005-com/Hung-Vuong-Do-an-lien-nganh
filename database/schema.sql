@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS users (
     birth_date  DATE,
     address     TEXT,
     avatar_url  VARCHAR(500),
-    gender      VARCHAR(10) NOT NULL DEFAULT 'male',
+    gender      ENUM('male', 'female', 'other') NULL,
     role        ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
     card_holder VARCHAR(100),
     card_type VARCHAR(20),

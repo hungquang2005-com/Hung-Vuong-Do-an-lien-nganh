@@ -16,6 +16,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { AuthUser } from '../common/types/auth-user.type';
 import { CouponsService } from './coupons.service';
 import { Coupon } from '../database/entities/coupon.entity';
+import { ValidateCouponDto } from './validate-coupon.dto';
 
 @Controller('coupons')
 export class CouponsController {
@@ -73,11 +74,7 @@ export class CouponsController {
   @UseGuards(JwtAuthGuard)
   async validateCoupon(
     @Body()
-    body: {
-      code: string;
-      orderAmount: number;
-      productId?: number;
-    },
+    body: ValidateCouponDto,
     @CurrentUser() user: AuthUser,
   ) {
     return this.couponsService.validateCoupon(

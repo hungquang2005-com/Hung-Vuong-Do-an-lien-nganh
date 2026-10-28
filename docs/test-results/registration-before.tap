@@ -1,0 +1,103 @@
+TAP version 13
+# Subtest: QA-AUTH: real HTTP authentication, DTOs, roles and OTP with isolated repositories
+    # Subtest: QA-A01 registration rejects invalid, empty and overlong data and role spoofing
+    not ok 1 - QA-A01 registration rejects invalid, empty and overlong data and role spoofing
+      ---
+      duration_ms: 149.3106
+      location: 'C:\\xampp\\htdocs\\gia-dung-react-nest\\backend\\src\\auth\\auth.http.spec.ts:102:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        201 !== 400
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 400
+      actual: 201
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\auth\auth.http.spec.ts:62:14)
+        processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:888:9)
+        async TestContext.<anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\auth\auth.http.spec.ts:59:3)
+        async Test.run (node:internal/test_runner/test:888:9)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:280:3)
+      ...
+    # Subtest: QA-A02 registration hashes password, forces USER and rejects duplicates
+    not ok 2 - QA-A02 registration hashes password, forces USER and rejects duplicates
+      ---
+      duration_ms: 5.0492
+      location: 'C:\\xampp\\htdocs\\gia-dung-react-nest\\backend\\src\\auth\\auth.http.spec.ts:109:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        409 !== 201
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 201
+      actual: 409
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\auth\auth.http.spec.ts:68:12)
+        processTicksAndRejections (node:internal/process/task_queues:105:5)
+        async Test.run (node:internal/test_runner/test:888:9)
+        async TestContext.<anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\auth\auth.http.spec.ts:66:3)
+        async Test.run (node:internal/test_runner/test:888:9)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:280:3)
+      ...
+    # Subtest: QA-A03 username/email login succeeds; wrong password and unknown account return 401
+    ok 3 - QA-A03 username/email login succeeds; wrong password and unknown account return 401
+      ---
+      duration_ms: 208.6206
+      ...
+    # Subtest: QA-A04 JWT missing, invalid, expired and wrong signature cannot read profile
+    ok 4 - QA-A04 JWT missing, invalid, expired and wrong signature cannot read profile
+      ---
+      duration_ms: 15.9868
+      ...
+    # Subtest: QA-A05 all admin dashboard routes enforce anonymous 401, USER 403 and ADMIN 200
+    ok 5 - QA-A05 all admin dashboard routes enforce anonymous 401, USER 403 and ADMIN 200
+      ---
+      duration_ms: 19.231
+      ...
+    # Subtest: QA-A06 forgot-password replaces old OTP, stores only hash and uses five-minute expiry
+    ok 6 - QA-A06 forgot-password replaces old OTP, stores only hash and uses five-minute expiry
+      ---
+      duration_ms: 188.3173
+      ...
+    # Subtest: QA-A07 wrong, malformed, expired and unverified OTP cannot reset password
+    ok 7 - QA-A07 wrong, malformed, expired and unverified OTP cannot reset password
+      ---
+      duration_ms: 132.3755
+      ...
+    # Subtest: QA-A08 verified OTP resets password exactly once and invalidates previous credentials
+    ok 8 - QA-A08 verified OTP resets password exactly once and invalidates previous credentials
+      ---
+      duration_ms: 327.5761
+      ...
+    # Subtest: QA-A09 failed mail delivery removes pending token and exposes no OTP
+    ok 9 - QA-A09 failed mail delivery removes pending token and exposes no OTP
+      ---
+      duration_ms: 64.6117
+      ...
+    1..9
+not ok 1 - QA-AUTH: real HTTP authentication, DTOs, roles and OTP with isolated repositories
+  ---
+  duration_ms: 1160.0192
+  location: 'C:\\xampp\\htdocs\\gia-dung-react-nest\\backend\\src\\auth\\auth.http.spec.ts:52:25'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 10
+# suites 0
+# pass 7
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6074.8717

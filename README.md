@@ -36,32 +36,10 @@ Gia dụng Việt mô phỏng quy trình mua sắm trực tuyến từ lúc khá
 - Xem bảng điều khiển và báo cáo doanh thu.
 - Quản lý sản phẩm, chương trình khuyến mãi, mã giảm giá và tài khoản người dùng.
 - Theo dõi đơn hàng và cập nhật trạng thái xử lý.
-- Tiếp nhận tin nhắn liên hệ.
-- Quản lý kho kiến thức của chatbot.
-
-## Luồng hoạt động
-
-### Mua hàng
-
-1. Khách hàng duyệt hoặc tìm sản phẩm trên giao diện React.
-2. Frontend gửi yêu cầu đến REST API; NestJS kiểm tra dữ liệu và quyền truy cập.
-3. Backend đọc hoặc cập nhật dữ liệu MySQL thông qua TypeORM.
-4. Khách hàng xác nhận giỏ hàng, thông tin nhận hàng, mã giảm giá và phương thức thanh toán.
-5. Backend tạo đơn hàng cùng bản ghi thanh toán; khách hàng theo dõi đơn trong tài khoản.
-
-### Xác thực và phân quyền
-
-Khi đăng nhập, backend xác minh thông tin và cấp JWT. Frontend gửi JWT trong các yêu cầu cần đăng nhập. Các API quản trị kiểm tra vai trò ADMIN trước khi thực hiện thao tác.
-
-### Thanh toán
-
-- **COD:** đơn hàng được tạo để thanh toán khi nhận hàng.
-- **Thẻ mô phỏng:** giao diện xác nhận thẻ phục vụ trình diễn; hệ thống không kết nối ngân hàng và không thu tiền thật.
-- **QR qua PayOS:** backend tạo liên kết thanh toán và xác minh kết quả từ PayOS/webhook trước khi cập nhật trạng thái.
-
-### Chatbot và email
-
-Chatbot có thể sử dụng Gemini và dữ liệu kiến thức do quản trị viên quản lý. Email OTP cần cấu hình Resend. Nếu chưa cung cấp khóa dịch vụ, các chức năng phụ thuộc dịch vụ đó sẽ không hoạt động đầy đủ.
+- Quản lý tài khoản người dùng, mã giảm giá và tin nhắn liên hệ.
+- Xem dashboard và doanh thu theo tháng.
+- Quản lý nội dung kiến thức cho chatbot.
+- Chuyển giao diện quản trị giữa chế độ sáng và tối.
 
 ## Công nghệ
 
@@ -211,9 +189,7 @@ database/
   *.sql          Schema bổ sung cho các chức năng mở rộng
 ```
 
-## Ghi chú khi trình diễn
+## Giấy phép (License)
 
-- Muốn thanh toán QR cập nhật tự động, cần thông tin PayOS hợp lệ và webhook có thể truy cập từ Internet; endpoint webhook là `/api/payment/payos/webhook`.
-- Thanh toán thẻ hiện chỉ mô phỏng luồng xác nhận, không tạo giao dịch ngân hàng thật.
-- Chatbot Gemini và email OTP cần lần lượt có `GEMINI_API_KEY` và thông tin Resend hợp lệ.
-- Ảnh sản phẩm tải lên được backend phục vụ từ đường dẫn `/uploads`.
+Dự án này được phát hành dưới giấy phép [MIT](LICENSE). Xem chi tiết tại file [LICENSE](LICENSE).
+

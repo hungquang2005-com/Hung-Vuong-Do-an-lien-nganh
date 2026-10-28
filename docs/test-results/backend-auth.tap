@@ -1,0 +1,81 @@
+TAP version 13
+# Subtest: legacy users schema upgrades once using ADD only, and covers every User column
+ok 1 - legacy users schema upgrades once using ADD only, and covers every User column
+  ---
+  duration_ms: 6.6783
+  ...
+# Subtest: partially upgraded schema adds only missing fields, and a failed ALTER never reports success
+ok 2 - partially upgraded schema adds only missing fields, and a failed ALTER never reports success
+  ---
+  duration_ms: 1.542
+  ...
+# Subtest: QA-AUTH: real HTTP authentication, DTOs, roles and OTP with isolated repositories
+    # Subtest: QA-A01 registration rejects invalid, empty and overlong data and role spoofing
+    ok 1 - QA-A01 registration rejects invalid, empty and overlong data and role spoofing
+      ---
+      duration_ms: 157.7416
+      ...
+    # Subtest: QA-A02 registration hashes password, forces USER and rejects duplicates
+    ok 2 - QA-A02 registration hashes password, forces USER and rejects duplicates
+      ---
+      duration_ms: 240.3346
+      ...
+    # Subtest: QA-A03 username/email login succeeds; wrong password and unknown account return 401
+    ok 3 - QA-A03 username/email login succeeds; wrong password and unknown account return 401
+      ---
+      duration_ms: 279.1277
+      ...
+    # Subtest: QA-A04 JWT missing, invalid, expired and wrong signature cannot read profile
+    ok 4 - QA-A04 JWT missing, invalid, expired and wrong signature cannot read profile
+      ---
+      duration_ms: 24.1352
+      ...
+    # Subtest: QA-A05 all admin dashboard routes enforce anonymous 401, USER 403 and ADMIN 200
+    ok 5 - QA-A05 all admin dashboard routes enforce anonymous 401, USER 403 and ADMIN 200
+      ---
+      duration_ms: 30.6494
+      ...
+    # Subtest: QA-A06 forgot-password replaces old OTP, stores only hash and uses five-minute expiry
+    ok 6 - QA-A06 forgot-password replaces old OTP, stores only hash and uses five-minute expiry
+      ---
+      duration_ms: 245.0159
+      ...
+    # Subtest: QA-A07 wrong, malformed, expired and unverified OTP cannot reset password
+    ok 7 - QA-A07 wrong, malformed, expired and unverified OTP cannot reset password
+      ---
+      duration_ms: 194.9739
+      ...
+    # Subtest: QA-A08 verified OTP resets password exactly once and invalidates previous credentials
+    ok 8 - QA-A08 verified OTP resets password exactly once and invalidates previous credentials
+      ---
+      duration_ms: 420.9719
+      ...
+    # Subtest: QA-A09 failed mail delivery removes pending token and exposes no OTP
+    ok 9 - QA-A09 failed mail delivery removes pending token and exposes no OTP
+      ---
+      duration_ms: 87.0912
+      ...
+    1..9
+ok 3 - QA-AUTH: real HTTP authentication, DTOs, roles and OTP with isolated repositories
+  ---
+  duration_ms: 1795.6667
+  ...
+# Subtest: changePassword checks confirmation and current password before saving
+ok 4 - changePassword checks confirmation and current password before saving
+  ---
+  duration_ms: 161.5091
+  ...
+# Subtest: merged profile endpoint validates fields and saves personal data without losing avatar or payment profile
+ok 5 - merged profile endpoint validates fields and saves personal data without losing avatar or payment profile
+  ---
+  duration_ms: 10.4
+  ...
+1..5
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 18655.337

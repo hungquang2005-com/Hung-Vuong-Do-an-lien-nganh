@@ -11,6 +11,7 @@ export interface DashboardData {
   chartOrdersByDay: Array<{ day: string; value: number }>;
 }
 export type Role = 'USER' | 'ADMIN';
+export type Gender = 'male' | 'female' | 'other';
 
 export interface SavedDemoCard {
   holder: string;
@@ -27,9 +28,9 @@ export interface User {
   username: string | null;
   email: string;
   phone: string | null;
-  birthDate?: string | null;
+  birthDate: string | null;
+  gender: Gender | null;
   address?: string | null;
-  gender?: string;
   avatarUrl?: string | null;
   role: Role;
   savedCard?: SavedDemoCard | null;

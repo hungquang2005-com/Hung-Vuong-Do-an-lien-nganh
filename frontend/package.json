@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "test": "node ../tests/run-tests.cjs frontend",
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "test:chat": "node --experimental-strip-types --test scripts/chat-stream.test.mjs",
+    "test:chat": "node ../tests/run-tests.cjs frontend chat",
+    "test:ui": "node ../tests/run-tests.cjs frontend ui",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -21,5 +23,6 @@
     "@vitejs/plugin-react": "^4.6.0",
     "typescript": "^5.9.0",
     "vite": "^6.3.5"
-  }
+  },
+  "license": "MIT"
 }

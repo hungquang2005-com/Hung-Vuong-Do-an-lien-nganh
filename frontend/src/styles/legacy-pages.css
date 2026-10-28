@@ -829,7 +829,8 @@
       color: var(--danger);
       transition: color .2s ease;
     }
-    .field.valid .required { color: var(--success); }
+    .field.valid .required,
+    .checkout-info-grid .field:has(:required:valid) .required { color: var(--success); }
     .field.invalid .form-input,
     .field.invalid .form-select {
       border-color: rgba(184, 50, 50, .55);
@@ -1007,7 +1008,7 @@
     .checkout-terms { display:flex; align-items:flex-start; gap:10px; margin-top:22px; color:var(--ink); font-weight:650; line-height:1.5; cursor:pointer; }
     .checkout-terms input { width:17px; height:17px; margin:2px 0 0; accent-color:var(--brand); flex:none; }
     .checkout-order-error { margin-top:16px; padding:12px 14px; border:1px solid rgba(184,50,50,.25); border-radius:8px; background:#fff5f4; color:var(--danger); }
-    .voucher-panel { position:relative; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; margin:16px 0 22px; padding:12px; border-radius:10px; background:#f1f4f2; }
+    .voucher-panel { position:relative; display:grid; grid-template-columns:minmax(0,1fr); gap:8px; margin:16px 0 22px; padding:12px; border-radius:10px; background:#f1f4f2; }
     .voucher-entry { display:flex; min-width:0; }
     .voucher-entry input { width:100%; min-width:0; height:44px; padding:0 12px; border:1px solid var(--line); border-right:0; border-radius:8px 0 0 8px; background:#fff; color:var(--ink); font:inherit; }
     .voucher-entry input:focus { outline:0; border-color:var(--brand); box-shadow:0 0 0 3px rgba(15,79,63,.08); }
@@ -1146,7 +1147,7 @@
     .payment-method input { display: none; }
     .payment-method-card {
       min-height: 200px;
-      height: 200px;
+      height: 100%;
       box-sizing: border-box;
       display: grid;
       place-items: center;

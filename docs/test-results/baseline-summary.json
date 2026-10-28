@@ -1,0 +1,26 @@
+{
+  "node": "v22.8.0",
+  "executedAt": "2026-10-26T20:41:25.702Z",
+  "runs": [
+    {
+      "name": "backend",
+      "command": "node --test --test-concurrency=1 --test-reporter=tap --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=C:\\xampp\\htdocs\\gia-dung-react-nest\\docs\\test-results\\backend.xml -r ts-node/register src\\addresses\\addresses.service.spec.ts src\\auth\\auth-schema.spec.ts src\\auth\\auth.service.spec.ts src\\chat\\chat.spec.ts src\\chat\\checkout.spec.ts src\\chat\\shopping.spec.ts src\\chat\\user-actions.spec.ts src\\promotions\\promotions.spec.ts src\\reviews\\reviews.spec.ts",
+      "exitCode": 0,
+      "tests": 83,
+      "pass": 83,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "name": "frontend",
+      "command": "node --test --test-concurrency=1 --test-reporter=tap --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=C:\\xampp\\htdocs\\gia-dung-react-nest\\docs\\test-results\\frontend.xml --experimental-strip-types scripts\\chat-stream.test.mjs",
+      "exitCode": 0,
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    }
+  ]
+}

@@ -12,7 +12,7 @@ export const authApi = {
   resetPassword: (email: string, otp: string, newPassword: string) => api.post<{ message: string }>('/auth/reset-password', { email, otp, newPassword }),
   changePassword: (currentPassword: string, newPassword: string, confirmPassword: string) => api.post<{ message: string }>('/auth/change-password', { currentPassword, newPassword, confirmPassword }),
   me: () => api.get<User>('/auth/me'),
-  updateProfile: (data: { fullName: string; phone: string; birthDate: string; address: string; gender: string }) => api.patch<User>('/auth/me', data),
+  updateProfile: (data: Pick<User, 'fullName' | 'phone' | 'birthDate' | 'gender'> & { address?: string | null }) => api.patch<User>('/auth/me', data),
   updateCardProfile: (data: { holder: string; type: 'DOMESTIC' | 'INTERNATIONAL'; provider: string; last4: string; expMonth: number; expYear: number; pin?: string }) => api.patch<User>('/auth/me/card', data),
   updateAvatar: (form: FormData) => api.post<User>('/auth/me/avatar', form, { headers: { 'Content-Type': 'multipart/form-data' } }),
 };
@@ -81,6 +81,8 @@ export const favoriteApi = {
 
 export const addressApi = {
   list: () => api.get<UserAddress[]>('/addresses'),
+  create: (data: Pick<UserAddress, 'fullName' | 'phone' | 'address' | 'isDefault'>) => api.post<UserAddress>('/addresses', data),
+  update: (id: number, data: Partial<Pick<UserAddress, 'fullName' | 'phone' | 'address' | 'isDefault'>>) => api.patch<UserAddress>(`/addresses/${id}`, data),
 };
 
 export const couponApi = {

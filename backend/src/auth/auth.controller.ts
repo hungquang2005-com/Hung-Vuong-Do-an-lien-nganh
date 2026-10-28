@@ -13,6 +13,7 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { VerifyResetOtpDto } from './dto/verify-reset-otp.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCardProfileDto } from './dto/update-card-profile.dto';
 
 const avatarStorage = diskStorage({
@@ -63,8 +64,8 @@ export class AuthController {
 
   @Patch('me')
   @UseGuards(JwtAuthGuard)
-  updateMe(@CurrentUser() user: AuthUser, @Body() body: { fullName?: string; phone?: string | null; birthDate?: string | null; address?: string | null; gender?: string }) {
-    return this.auth.updateProfile(user.id, body);
+  updateProfile(@CurrentUser() user: AuthUser, @Body() dto: UpdateProfileDto) {
+    return this.auth.updateProfile(user.id, dto);
   }
 
   @Patch('me/card')

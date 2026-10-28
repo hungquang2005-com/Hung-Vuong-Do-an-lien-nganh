@@ -1,14 +1,14 @@
-﻿import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { isAxiosError } from 'axios';
 import { Link } from 'react-router-dom';
 import type { ChangeEvent } from 'react';
 import { ChevronDown, Save } from 'lucide-react';
 import { formatVnd, imageUrl } from '../api/client';
 import { addressApi, authApi, couponApi, favoriteApi, orderApi } from '../api/services';
-import type { Coupon, Favorite, Order, UserAddress } from '../api/types';
+import type { Coupon, Favorite, Gender, Order, UserAddress } from '../api/types';
 import { ProductCard } from '../components/ProductCard';
 import { useAuth } from '../context/AuthContext';
 
-type Gender = 'male' | 'female' | 'other';
 type ProfileForm = {
   fullName: string;
   email: string;
@@ -61,8 +61,16 @@ function toast(message: string) {
   window.dispatchEvent(new CustomEvent('toast', { detail: message }));
 }
 
+function apiError(error: unknown, fallback: string) {
+  if (!isAxiosError(error)) return fallback;
+  const message = error.response?.data?.message;
+  return Array.isArray(message) ? message.join(', ') : typeof message === 'string' ? message : fallback;
+}
+
 export function ProfilePage() {
   const { user, logout, refresh } = useAuth();
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [favorites, setFavorites] = useState<Favorite[]>([]);
@@ -86,16 +94,16 @@ export function ProfilePage() {
   const avatar = avatarPreview || (user?.avatarUrl ? imageUrl(user.avatarUrl) : 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=320&q=80');
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || editing) return;
     setForm({
       fullName: user.fullName || user.username || '',
       email: user.email,
       phone: user.phone || '',
       birthDate: user.birthDate?.slice(0, 10) || '',
-      gender: (user.gender as Gender) || 'male',
-      address: user.address || defaultAddress?.address || '',
+      gender: user.gender || 'male',
+      address: defaultAddress?.address || user.address || '',
     });
-  }, [user, defaultAddress?.address]);
+  }, [user, defaultAddress?.address, editing]);
 
   useEffect(() => {
     const card = user?.savedCard;
@@ -137,7 +145,53 @@ export function ProfilePage() {
   const displayName = form.fullName || user.fullName || user.username || 'Khách hàng';
   const orderItems = orders.reduce((total, order) => total + order.items.reduce((sum, item) => sum + item.quantity, 0), 0);
 
-  const update = (key: keyof ProfileForm, value: string) => setForm(current => ({ ...current, [key]: value }));
+  const update = (key: keyof ProfileForm, value: string) => {
+    setEditing(true);
+    setForm(current => ({ ...current, [key]: value }));
+  };
+  const save = async (e: FormEvent) => {
+    e.preventDefault();
+    const fullName = form.fullName.trim();
+    const phone = form.phone.trim();
+    const address = form.address.trim();
+    if (!fullName) return toast('Họ và tên không được để trống');
+    if (address !== (defaultAddress?.address || '') && (!address || !phone)) {
+      return toast(!address ? 'Địa chỉ không được để trống' : 'Cần số điện thoại để lưu địa chỉ');
+    }
+
+    setSaving(true);
+    try {
+      await authApi.updateProfile({
+        fullName,
+        phone: phone || null,
+        birthDate: form.birthDate || null,
+        gender: form.gender,
+        address,
+      });
+      await refresh();
+    } catch (error) {
+      toast(apiError(error, 'Không thể lưu hồ sơ. Vui lòng thử lại.'));
+      setSaving(false);
+      return;
+    }
+
+    try {
+      if (address !== (defaultAddress?.address || '')) {
+        const response = defaultAddress
+          ? await addressApi.update(defaultAddress.id, { address, isDefault: true })
+          : await addressApi.create({ fullName, phone, address, isDefault: true });
+        setAddresses(current => defaultAddress
+          ? current.map(item => item.id === response.data.id ? response.data : { ...item, isDefault: false })
+          : [response.data, ...current]);
+      }
+      setEditing(false);
+      toast('Đã lưu hồ sơ thành công');
+    } catch (error) {
+      toast(`Hồ sơ đã lưu nhưng địa chỉ chưa được cập nhật: ${apiError(error, 'Vui lòng thử lại.')}`);
+    } finally {
+      setSaving(false);
+    }
+  };
   const changeAvatar = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     event.target.value = '';
@@ -160,16 +214,6 @@ export function ProfilePage() {
     } finally {
       URL.revokeObjectURL(preview);
       setAvatarBusy(false);
-    }
-  };
-  const save = async (e: FormEvent) => {
-    e.preventDefault();
-    try {
-      const { data } = await authApi.updateProfile(form);
-      setForm(current => ({ ...current, fullName: data.fullName, phone: data.phone || '', address: data.address || '', birthDate: data.birthDate?.slice(0, 10) || '', gender: (data.gender as Gender) || 'male' }));
-      toast('Đã lưu hồ sơ');
-    } catch {
-      toast('Không thể lưu hồ sơ. Vui lòng thử lại.');
     }
   };
   const updateCardField = (key: keyof CardProfileForm, value: string) => setCardForm(current => ({ ...current, [key]: value }));
@@ -226,9 +270,15 @@ export function ProfilePage() {
             <h1>Hồ sơ cá nhân</h1>
             <p>Quản lý thông tin tài khoản và cập nhật địa chỉ nhận hàng.</p>
           </div>
-          <button type="submit" className="profile-mini-btn primary">
-            <i className="fa-solid fa-floppy-disk" /> Lưu thay đổi
-          </button>
+          {!editing ? (
+            <button type="button" className="profile-mini-btn" onClick={() => setEditing(true)}>
+              <i className="fa-solid fa-pen" /> Chỉnh sửa
+            </button>
+          ) : (
+            <button type="submit" className="profile-mini-btn primary" disabled={saving}>
+              <i className="fa-solid fa-floppy-disk" /> {saving ? 'Đang lưu...' : 'Lưu thay đổi'}
+            </button>
+          )}
         </div>
 
         <div className="profile-form-grid">
@@ -237,16 +287,16 @@ export function ProfilePage() {
             <span>Ảnh đại diện</span>
           </div>
           <label>Họ và tên
-            <input autoComplete="name" value={form.fullName} onChange={e => update('fullName', e.target.value)} />
+            <input autoComplete="name" value={form.fullName} onChange={e => update('fullName', e.target.value)} disabled={saving} />
           </label>
-          <label>Email
+          <label>Email (không thể thay đổi)
             <input value={form.email} readOnly />
           </label>
           <label>Số điện thoại
-            <input type="tel" autoComplete="tel" value={form.phone} onChange={e => update('phone', e.target.value)} />
+            <input type="tel" autoComplete="tel" value={form.phone} onChange={e => update('phone', e.target.value)} disabled={saving} />
           </label>
           <label>Ngày sinh
-            <input type="date" value={form.birthDate} onChange={e => update('birthDate', e.target.value)} />
+            <input type="date" value={form.birthDate} onChange={e => update('birthDate', e.target.value)} disabled={saving} />
           </label>
           <fieldset className="profile-gender">
             <legend>Giới tính</legend>
@@ -255,15 +305,15 @@ export function ProfilePage() {
               ['female', 'Nữ'],
               ['other', 'Khác'],
             ].map(([value, label]) => <label key={value}>
-              <input type="radio" name="gender" value={value} checked={form.gender === value} onChange={e => update('gender', e.target.value)} />
+              <input type="radio" name="gender" value={value} checked={form.gender === value} disabled={saving} onChange={e => update('gender', e.target.value)} />
               {label}
             </label>)}
           </fieldset>
           <label>Địa chỉ mặc định
-            <textarea rows={2} autoComplete="street-address" value={form.address} onChange={e => update('address', e.target.value)} />
+            <textarea rows={2} autoComplete="street-address" value={form.address} onChange={e => update('address', e.target.value)} disabled={saving} />
           </label>
         </div>
-        <button type="submit" className="profile-mobile-save profile-mini-btn primary"><Save size={18} aria-hidden="true" /> Lưu thay đổi</button>
+        {editing && <button type="submit" className="profile-mobile-save profile-mini-btn primary" disabled={saving}><Save size={18} aria-hidden="true" /> {saving ? 'Đang lưu...' : 'Lưu thay đổi'}</button>}
       </form>
 
       <form className="profile-panel" id="profile-card" onSubmit={saveCard}>

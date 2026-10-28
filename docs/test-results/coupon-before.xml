@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testsuite name="QA-HTTP: cart and orders enforce JWT, ownership, DTOs and repeatable checkout" time="0.430314" disabled="0" errors="0" tests="6" failures="1" skipped="0" hostname="LAPTOP-L2IESHJ4">
+		<testcase name="QA-B01 anonymous cart/orders and ordinary USER admin access are denied" time="0.050789" classname="test"/>
+		<testcase name="QA-B02 invalid quantities, missing products, zero stock and owner spoofing do not mutate cart" time="0.058728" classname="test"/>
+		<testcase name="QA-B03 cart add/update/remove stay inside the signed-in account" time="0.026031" classname="test"/>
+		<testcase name="QA-E01 malformed coupon input returns 400 rather than an internal server error" time="0.010712" classname="test" failure="Expected values to be strictly equal:500 !== 400">
+			<failure type="testCodeFailure" message="Expected values to be strictly equal:500 !== 400">
+Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+500 !== 400
+
+    at async TestContext.&lt;anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\chat\checkout.spec.ts:271:5) {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  500 !== 400
+  
+      at TestContext.&lt;anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\chat\checkout.spec.ts:191:14)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async Test.run (node:internal/test_runner/test:888:9)
+      at async TestContext.&lt;anonymous> (C:\xampp\htdocs\gia-dung-react-nest\backend\src\chat\checkout.spec.ts:188:3)
+      at async Test.run (node:internal/test_runner/test:888:9)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:280:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 400,
+    operator: 'strictEqual'
+  }
+}
+			</failure>
+		</testcase>
+		<testcase name="QA-C01 forged client prices are rejected and server quote controls repeated order creation" time="0.021934" classname="test"/>
+		<testcase name="QA-C02 foreign order access is forbidden and delivered COD synchronizes payment state" time="0.023602" classname="test"/>
+	</testsuite>
+	<!-- tests 7 -->
+	<!-- suites 0 -->
+	<!-- pass 5 -->
+	<!-- fail 2 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 6019.2511 -->
+</testsuites>

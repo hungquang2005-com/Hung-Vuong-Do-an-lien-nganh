@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="SSE displays a delta before the final result and preserves new action metadata" time="0.050042" classname="test"/>
+	<testcase name="arbitrary UTF-8 byte boundaries preserve Vietnamese, emoji, Markdown and SSE CRLF frames" time="0.003812" classname="test"/>
+	<testcase name="structured action validation errors and broken streams never appear as success" time="0.006737" classname="test"/>
+	<testcase name="real chunk queue preserves every character while displaying small groups" time="0.003783" classname="test"/>
+	<testcase name="aborting a response discards its queue and cannot overwrite the next response" time="0.001423" classname="test"/>
+	<testcase name="cancel during unmount resolves queue completion and ignores future chunks" time="0.000775" classname="test"/>
+	<!-- tests 6 -->
+	<!-- suites 0 -->
+	<!-- pass 6 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 369.0803 -->
+</testsuites>

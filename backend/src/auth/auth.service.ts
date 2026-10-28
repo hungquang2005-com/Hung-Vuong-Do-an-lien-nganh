@@ -12,6 +12,7 @@ import { PasswordResetToken } from '../database/entities/password-reset-token.en
 import { EmailService } from '../email/email.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateCardProfileDto } from './dto/update-card-profile.dto';
 
 @Injectable()
@@ -58,7 +59,7 @@ export class AuthService {
     return this.publicUser(user);
   }
 
-  async updateProfile(userId: number, data: { fullName?: string; phone?: string | null; birthDate?: string | null; address?: string | null; gender?: string }) {
+  async updateProfile(userId: number, data: UpdateProfileDto) {
     const user = await this.users.findOneByOrFail({ id: userId });
     if (data.fullName !== undefined) user.fullName = data.fullName.trim();
     if (data.phone !== undefined) user.phone = data.phone?.trim() || null;

@@ -4,6 +4,12 @@ import { Cart } from './cart.entity';
 import { UserRole } from './enums';
 import { Order } from './order.entity';
 
+export enum UserGender {
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHER = 'other',
+}
+
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
@@ -33,8 +39,8 @@ export class User {
   @Column({ name: 'avatar_url', type: 'varchar', length: 500, nullable: true })
   avatarUrl: string | null;
 
-  @Column({ type: 'varchar', length: 10, default: 'male' })
-  gender: string;
+  @Column({ type: 'enum', enum: UserGender, nullable: true })
+  gender: UserGender | null;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole;

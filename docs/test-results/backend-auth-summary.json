@@ -1,0 +1,18 @@
+{
+  "node": "v22.8.0",
+  "npm": "10.8.2",
+  "executedAt": "2026-10-26T21:01:03.512Z",
+  "runs": [
+    {
+      "name": "backend",
+      "command": "node --test --test-concurrency=1 --test-reporter=tap --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=C:\\xampp\\htdocs\\gia-dung-react-nest\\docs\\test-results\\backend-auth.xml --test-reporter=file:///C:/xampp/htdocs/gia-dung-react-nest/tests/test-json-reporter.cjs --test-reporter-destination=C:\\xampp\\htdocs\\gia-dung-react-nest\\docs\\test-results\\backend-auth.jsonl -r ts-node/register C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\auth-schema.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\auth.http.spec.ts C:\\xampp\\htdocs\\gia-dung-react-nest\\tests\\backend\\auth.service.spec.ts",
+      "exitCode": 0,
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    }
+  ],
+  "builds": []
+}

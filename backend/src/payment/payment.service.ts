@@ -1,5 +1,5 @@
 // file xử lý PayOS, tạo link thanh toán và cập nhật webhook đã xác thực.
-import { BadRequestException, ConflictException, ForbiddenException, HttpException, HttpStatus, Injectable, NotFoundException, ServiceUnavailableException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, HttpException, HttpStatus, Injectable, Logger, NotFoundException, ServiceUnavailableException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PayOS, type Webhook, type WebhookData } from '@payos/node';
@@ -13,6 +13,7 @@ import { User } from '../database/entities/user.entity';
 @Injectable()
 export class PaymentService {
   private payos: PayOS | null = null;
+  private readonly logger = new Logger(PaymentService.name);
 
   constructor(
     private readonly dataSource: DataSource,
@@ -165,7 +166,16 @@ export class PaymentService {
 
   private async lookupLink(orderId: number) {
     try { return await this.getPayOS().paymentRequests.get(orderId); } catch (error) {
-      if ((error as { status?: number }).status === 404 || (error as { code?: string }).code === '231') return null;
+      const payosError = error as { status?: number; code?: string; message?: string; response?: { data?: unknown } };
+      // PayOS may return HTTP 200 with business code 101 when no link exists yet.
+      if (payosError.status === 404 || ['101', '231'].includes(payosError.code ?? '')) return null;
+      this.logger.error('PayOS payment lookup failed', {
+        orderCode: orderId,
+        status: payosError.status,
+        code: payosError.code,
+        message: payosError.message,
+        response: payosError.response?.data,
+      });
       throw new ServiceUnavailableException('Chưa thể xác minh thông tin từ PayOS. Vui lòng kiểm tra lại sau.');
     }
   }

@@ -5,7 +5,7 @@ const profileColumns = {
   birth_date: 'DATE NULL',
   address: 'TEXT NULL',
   avatar_url: 'VARCHAR(500) NULL',
-  gender: "VARCHAR(10) NOT NULL DEFAULT 'male'",
+  gender: "ENUM('male', 'female', 'other') NULL",
   card_holder: 'VARCHAR(100) NULL',
   card_type: 'VARCHAR(20) NULL',
   card_provider: 'VARCHAR(40) NULL',

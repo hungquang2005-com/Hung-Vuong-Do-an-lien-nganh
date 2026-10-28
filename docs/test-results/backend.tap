@@ -1,0 +1,545 @@
+TAP version 13
+# Subtest: default address changes stay inside the authenticated user
+ok 1 - default address changes stay inside the authenticated user
+  ---
+  duration_ms: 2.93
+  ...
+# Subtest: legacy users schema upgrades once using ADD only, and covers every User column
+ok 2 - legacy users schema upgrades once using ADD only, and covers every User column
+  ---
+  duration_ms: 6.5192
+  ...
+# Subtest: partially upgraded schema adds only missing fields, and a failed ALTER never reports success
+ok 3 - partially upgraded schema adds only missing fields, and a failed ALTER never reports success
+  ---
+  duration_ms: 1.5297
+  ...
+# Subtest: QA-AUTH: real HTTP authentication, DTOs, roles and OTP with isolated repositories
+    # Subtest: QA-A01 registration rejects invalid, empty and overlong data and role spoofing
+    ok 1 - QA-A01 registration rejects invalid, empty and overlong data and role spoofing
+      ---
+      duration_ms: 141.4564
+      ...
+    # Subtest: QA-A02 registration hashes password, forces USER and rejects duplicates
+    ok 2 - QA-A02 registration hashes password, forces USER and rejects duplicates
+      ---
+      duration_ms: 200.6288
+      ...
+    # Subtest: QA-A03 username/email login succeeds; wrong password and unknown account return 401
+    ok 3 - QA-A03 username/email login succeeds; wrong password and unknown account return 401
+      ---
+      duration_ms: 240.7153
+      ...
+    # Subtest: QA-A04 JWT missing, invalid, expired and wrong signature cannot read profile
+    ok 4 - QA-A04 JWT missing, invalid, expired and wrong signature cannot read profile
+      ---
+      duration_ms: 21.9097
+      ...
+    # Subtest: QA-A05 all admin dashboard routes enforce anonymous 401, USER 403 and ADMIN 200
+    ok 5 - QA-A05 all admin dashboard routes enforce anonymous 401, USER 403 and ADMIN 200
+      ---
+      duration_ms: 33.8708
+      ...
+    # Subtest: QA-A06 forgot-password replaces old OTP, stores only hash and uses five-minute expiry
+    ok 6 - QA-A06 forgot-password replaces old OTP, stores only hash and uses five-minute expiry
+      ---
+      duration_ms: 221.3549
+      ...
+    # Subtest: QA-A07 wrong, malformed, expired and unverified OTP cannot reset password
+    ok 7 - QA-A07 wrong, malformed, expired and unverified OTP cannot reset password
+      ---
+      duration_ms: 153.1106
+      ...
+    # Subtest: QA-A08 verified OTP resets password exactly once and invalidates previous credentials
+    ok 8 - QA-A08 verified OTP resets password exactly once and invalidates previous credentials
+      ---
+      duration_ms: 366.1912
+      ...
+    # Subtest: QA-A09 failed mail delivery removes pending token and exposes no OTP
+    ok 9 - QA-A09 failed mail delivery removes pending token and exposes no OTP
+      ---
+      duration_ms: 73.2131
+      ...
+    1..9
+ok 4 - QA-AUTH: real HTTP authentication, DTOs, roles and OTP with isolated repositories
+  ---
+  duration_ms: 1525.6154
+  ...
+# Subtest: changePassword checks confirmation and current password before saving
+ok 5 - changePassword checks confirmation and current password before saving
+  ---
+  duration_ms: 171.9907
+  ...
+# Subtest: merged profile endpoint validates fields and saves personal data without losing avatar or payment profile
+ok 6 - merged profile endpoint validates fields and saves personal data without losing avatar or payment profile
+  ---
+  duration_ms: 10.3011
+  ...
+# Subtest: matching preserves numbers, negation and different policy questions
+ok 7 - matching preserves numbers, negation and different policy questions
+  ---
+  duration_ms: 3.3249
+  ...
+# Subtest: product budgets parse Vietnamese amounts and do not interpret greetings as furniture
+ok 8 - product budgets parse Vietnamese amounts and do not interpret greetings as furniture
+  ---
+  duration_ms: 3.711
+  ...
+# Subtest: product lookup emits bounded parameterized MySQL with current price/stock filters
+ok 9 - product lookup emits bounded parameterized MySQL with current price/stock filters
+  ---
+  duration_ms: 154.7473
+  ...
+# Subtest: HTTP chatbot: required scenarios, moderation, metadata, security and safe failures
+    # Subtest: existing JWT and ADMIN guards cover every admin route; DTO rejects bad input
+    ok 1 - existing JWT and ADMIN guards cover every admin route; DTO rejects bad input
+      ---
+      duration_ms: 144.876
+      ...
+    # Subtest: TEST 1: Xin chào
+    ok 2 - TEST 1: Xin chào
+      ---
+      duration_ms: 5.6176
+      ...
+    # Subtest: TEST 2: haha
+    ok 3 - TEST 2: haha
+      ---
+      duration_ms: 4.8307
+      ...
+    # Subtest: TEST 3: hihi
+    ok 4 - TEST 3: hihi
+      ---
+      duration_ms: 2.7077
+      ...
+    # Subtest: TEST 4: Trời hôm nay đẹp thật
+    ok 5 - TEST 4: Trời hôm nay đẹp thật
+      ---
+      duration_ms: 4.5339
+      ...
+    # Subtest: TEST 5: Cảm ơn bạn
+    ok 6 - TEST 5: Cảm ơn bạn
+      ---
+      duration_ms: 2.7691
+      ...
+    # Subtest: TEST 11: kkkkkkkk
+    ok 7 - TEST 11: kkkkkkkk
+      ---
+      duration_ms: 2.5462
+      ...
+    # Subtest: TEST 12: 😊
+    ok 8 - TEST 12: 😊
+      ---
+      duration_ms: 2.1741
+      ...
+    # Subtest: TEST 6: shipping unknown -> draft only, HIGH despite model LOW/99
+    ok 9 - TEST 6: shipping unknown -> draft only, HIGH despite model LOW/99
+      ---
+      duration_ms: 13.3526
+      ...
+    # Subtest: TEST 7: admin approves -> normalized and similarity knowledge hits
+    ok 10 - TEST 7: admin approves -> normalized and similarity knowledge hits
+      ---
+      duration_ms: 11.2451
+      ...
+    # Subtest: TEST 8: chairs within 2M -> current product facts, zero Gemini calls
+    ok 11 - TEST 8: chairs within 2M -> current product facts, zero Gemini calls
+      ---
+      duration_ms: 29.8148
+      ...
+    # Subtest: product search extracts natural language and keeps product context
+    ok 12 - product search extracts natural language and keeps product context
+      ---
+      duration_ms: 6.9408
+      ...
+    # Subtest: TEST 9: safe general question -> model HIGH is normalized to LOW and reused
+    ok 13 - TEST 9: safe general question -> model HIGH is normalized to LOW and reused
+      ---
+      duration_ms: 6.0359
+      ...
+    # Subtest: TEST 10: refund HIGH never auto-approves even if model says general/LOW/99
+    ok 14 - TEST 10: refund HIGH never auto-approves even if model says general/LOW/99
+      ---
+      duration_ms: 3.2674
+      ...
+    # Subtest: out of scope, spam and private customer data never reach Gemini/KB
+    ok 15 - out of scope, spam and private customer data never reach Gemini/KB
+      ---
+      duration_ms: 23.6978
+      ...
+    # Subtest: admin filters, edits/rejects, product freshness and preserved legacy hidden entries
+    ok 16 - admin filters, edits/rejects, product freshness and preserved legacy hidden entries
+      ---
+      duration_ms: 83.9087
+      ...
+    # Subtest: Gemini errors and invalid structured JSON never leak provider data or save knowledge
+    ok 17 - Gemini errors and invalid structured JSON never leak provider data or save knowledge
+      ---
+      duration_ms: 34.6669
+      ...
+    # Subtest: missing key, DB read/write errors are safe; small talk works during outages
+    ok 18 - missing key, DB read/write errors are safe; small talk works during outages
+      ---
+      duration_ms: 10.3153
+      ...
+    1..18
+ok 10 - HTTP chatbot: required scenarios, moderation, metadata, security and safe failures
+  ---
+  duration_ms: 650.6207
+  ...
+# Subtest: intent rules and conservative auto-approve gate
+ok 11 - intent rules and conservative auto-approve gate
+  ---
+  duration_ms: 0.8295
+  ...
+# Subtest: Gemini prompt includes bounded approved RAG context
+ok 12 - Gemini prompt includes bounded approved RAG context
+  ---
+  duration_ms: 0.3119
+  ...
+# Subtest: streamed JSON decodes answer prefixes without exposing metadata or partial escapes
+ok 13 - streamed JSON decodes answer prefixes without exposing metadata or partial escapes
+  ---
+  duration_ms: 0.4801
+  ...
+# Subtest: HTTP SSE forwards Gemini chunks before completion, preserves final metadata and hides policy drafts
+ok 14 - HTTP SSE forwards Gemini chunks before completion, preserves final metadata and hides policy drafts
+  ---
+  duration_ms: 30.4971
+  ...
+# Subtest: QA-HTTP: cart and orders enforce JWT, ownership, DTOs and repeatable checkout
+    # Subtest: QA-B01 anonymous cart/orders and ordinary USER admin access are denied
+    ok 1 - QA-B01 anonymous cart/orders and ordinary USER admin access are denied
+      ---
+      duration_ms: 57.0872
+      ...
+    # Subtest: QA-B02 invalid quantities, missing products, zero stock and owner spoofing do not mutate cart
+    ok 2 - QA-B02 invalid quantities, missing products, zero stock and owner spoofing do not mutate cart
+      ---
+      duration_ms: 63.7362
+      ...
+    # Subtest: QA-B03 cart add/update/remove stay inside the signed-in account
+    ok 3 - QA-B03 cart add/update/remove stay inside the signed-in account
+      ---
+      duration_ms: 25.6152
+      ...
+    # Subtest: QA-E01 malformed coupon input returns 400 rather than an internal server error
+    ok 4 - QA-E01 malformed coupon input returns 400 rather than an internal server error
+      ---
+      duration_ms: 23.4941
+      ...
+    # Subtest: QA-C01 forged client prices are rejected and server quote controls repeated order creation
+    ok 5 - QA-C01 forged client prices are rejected and server quote controls repeated order creation
+      ---
+      duration_ms: 34.7108
+      ...
+    # Subtest: QA-C02 foreign order access is forbidden and delivered COD synchronizes payment state
+    ok 6 - QA-C02 foreign order access is forbidden and delivered COD synchronizes payment state
+      ---
+      duration_ms: 44.9171
+      ...
+    1..6
+ok 15 - QA-HTTP: cart and orders enforce JWT, ownership, DTOs and repeatable checkout
+  ---
+  duration_ms: 530.3143
+  ...
+# Subtest: single-product checkout collects own address/voucher/method; only explicit confirmation creates order
+ok 16 - single-product checkout collects own address/voucher/method; only explicit confirmation creates order
+  ---
+  duration_ms: 13.8196
+  ...
+# Subtest: applying letter-only voucher K in chat immediately returns discounted checkout totals
+ok 17 - applying letter-only voucher K in chat immediately returns discounted checkout totals
+  ---
+  duration_ms: 11.1457
+  ...
+# Subtest: voucher K applies through the button and natural chat, recalculates an existing quote, and can be removed
+ok 18 - voucher K applies through the button and natural chat, recalculates an existing quote, and can be removed
+  ---
+  duration_ms: 10.2691
+  ...
+# Subtest: multi-product named/ordinal selection, quantity editing/removal, new address and cancellation
+ok 19 - multi-product named/ordinal selection, quantity editing/removal, new address and cancellation
+  ---
+  duration_ms: 12.3746
+  ...
+# Subtest: invalid products, stock, ownership, invalid/expired/private vouchers and expiry fail without side effects
+ok 20 - invalid products, stock, ownership, invalid/expired/private vouchers and expiry fail without side effects
+  ---
+  duration_ms: 2.6489
+  ...
+# Subtest: cart/price/address/coupon changes require a fresh summary and another confirmation
+ok 21 - cart/price/address/coupon changes require a fresh summary and another confirmation
+  ---
+  duration_ms: 2.94
+  ...
+# Subtest: durable UUID/hash survives concurrent confirmations, response timeout, process/session restart and rejects changed content
+ok 22 - durable UUID/hash survives concurrent confirmations, response timeout, process/session restart and rejects changed content
+  ---
+  duration_ms: 1.8884
+  ...
+# Subtest: last stock unit and last coupon use cannot be consumed by two concurrent users
+ok 23 - last stock unit and last coupon use cannot be consumed by two concurrent users
+  ---
+  duration_ms: 3.8365
+  ...
+# Subtest: failure after stock/order writes rolls back everything; retry commits once; ordinary checkout shares the formula
+ok 24 - failure after stock/order writes rolls back everything; retry commits once; ordinary checkout shares the formula
+  ---
+  duration_ms: 2.8494
+  ...
+# Subtest: PayOS uses owned persisted order amount; reuse, simultaneous link requests and provider timeout recovery never POST twice
+ok 25 - PayOS uses owned persisted order amount; reuse, simultaneous link requests and provider timeout recovery never POST twice
+  ---
+  duration_ms: 3.9938
+  ...
+# Subtest: SDK signature + amount/link/currency checks; valid/repeated webhook updates exactly the right order
+ok 26 - SDK signature + amount/link/currency checks; valid/repeated webhook updates exactly the right order
+  ---
+  duration_ms: 3.6499
+  ...
+# Subtest: pending/underpaid/return claims stay unpaid; signed GET can recover a delayed webhook
+ok 27 - pending/underpaid/return claims stay unpaid; signed GET can recover a delayed webhook
+  ---
+  duration_ms: 13.3309
+  ...
+# Subtest: CARD is explicitly simulated; missing setup rejected and dedicated PIN payment is idempotent
+ok 28 - CARD is explicitly simulated; missing setup rejected and dedicated PIN payment is idempotent
+  ---
+  duration_ms: 24.9438
+  ...
+# Subtest: HTTP: auth/DTO boundaries, durable replay in another ChatService, checkout SSE and Phase 1 work together
+ok 29 - HTTP: auth/DTO boundaries, durable replay in another ChatService, checkout SSE and Phase 1 work together
+  ---
+  duration_ms: 82.5128
+  ...
+# Subtest: additive migration is repeatable and checks primary/unique constraints matching entity metadata
+ok 30 - additive migration is repeatable and checks primary/unique constraints matching entity metadata
+  ---
+  duration_ms: 5.6696
+  ...
+# Subtest: promotion price uses exact integer rounding and event boundaries are start-inclusive/end-exclusive
+ok 31 - promotion price uses exact integer rounding and event boundaries are start-inclusive/end-exclusive
+  ---
+  duration_ms: 0.794
+  ...
+# Subtest: sale prices agree across cart and chatbot; pause/expiry restore original without writing it
+ok 32 - sale prices agree across cart and chatbot; pause/expiry restore original without writing it
+  ---
+  duration_ms: 1.2605
+  ...
+# Subtest: coupons apply only to regular lines and ignore a client-supplied inflated order amount
+ok 33 - coupons apply only to regular lines and ignore a client-supplied inflated order amount
+  ---
+  duration_ms: 2.2616
+  ...
+# Subtest: web checkout re-quotes expired/edited promotions, requires another click and persists the confirmed order amount
+ok 34 - web checkout re-quotes expired/edited promotions, requires another click and persists the confirmed order amount
+  ---
+  duration_ms: 2.6064
+  ...
+# Subtest: web buy-one checkout charges only the selected line and preserves other cart lines on confirmation and replay
+ok 35 - web buy-one checkout charges only the selected line and preserves other cart lines on confirmation and replay
+  ---
+  duration_ms: 2.8804
+  ...
+# Subtest: buy-one checkout rejects invalid, foreign and removed cart selections without consuming the remaining cart
+ok 36 - buy-one checkout rejects invalid, foreign and removed cart selections without consuming the remaining cart
+  ---
+  duration_ms: 2.9107
+  ...
+# Subtest: buy-one re-quotes keep the same product selection and never count unrelated lines for vouchers
+ok 37 - buy-one re-quotes keep the same product selection and never count unrelated lines for vouchers
+  ---
+  duration_ms: 3.6461
+  ...
+# Subtest: chat checkout promotion edits require re-confirmation and stock errors never create an order
+ok 38 - chat checkout promotion edits require re-confirmation and stock errors never create an order
+  ---
+  duration_ms: 1.25
+  ...
+# Subtest: QA-D02 favorite add is idempotent; listing and removal preserve the other account
+ok 39 - QA-D02 favorite add is idempotent; listing and removal preserve the other account
+  ---
+  duration_ms: 3.3804
+  ...
+# Subtest: QA-B04 catalog search builds parameterized MySQL for hostile keyword/category without connecting
+ok 40 - QA-B04 catalog search builds parameterized MySQL for hostile keyword/category without connecting
+  ---
+  duration_ms: 119.3296
+  ...
+# Subtest: QA-B05 product detail rejects missing IDs and serializes price, stock, promotion and review summary
+ok 41 - QA-B05 product detail rejects missing IDs and serializes price, stock, promotion and review summary
+  ---
+  duration_ms: 0.8769
+  ...
+# Subtest: promotion DTO rejects duplicate IDs, invalid discounts, excess items and untrusted fields
+ok 42 - promotion DTO rejects duplicate IDs, invalid discounts, excess items and untrusted fields
+  ---
+  duration_ms: 13.9556
+  ...
+# Subtest: promotion schema upgrade is additive and repeatable, preserving existing order totals
+ok 43 - promotion schema upgrade is additive and repeatable, preserving existing order totals
+  ---
+  duration_ms: 4.5484
+  ...
+# Subtest: QA-E02 invalid promotion dates, timezone, empty publication and exaggerated banner are rejected before writes
+ok 44 - QA-E02 invalid promotion dates, timezone, empty publication and exaggerated banner are rejected before writes
+  ---
+  duration_ms: 1.4279
+  ...
+# Subtest: QA-E03 overlap and missing products fail inside the locked promotion transaction without writes
+ok 45 - QA-E03 overlap and missing products fail inside the locked promotion transaction without writes
+  ---
+  duration_ms: 0.929
+  ...
+# Subtest: review DTO accepts only 1–5 integer stars and rejects spoofed buyer/order IDs
+ok 46 - review DTO accepts only 1–5 integer stars and rejects spoofed buyer/order IDs
+  ---
+  duration_ms: 8.3532
+  ...
+# Subtest: review summaries use database counts, convert numeric strings and keep unrated products at zero
+ok 47 - review summaries use database counts, convert numeric strings and keep unrated products at zero
+  ---
+  duration_ms: 0.9085
+  ...
+# Subtest: review migration is repeatable and never updates/deletes existing orders or customer data
+ok 48 - review migration is repeatable and never updates/deletes existing orders or customer data
+  ---
+  duration_ms: 5.4553
+  ...
+# Subtest: QA-D01 reviews require an owned delivered and paid purchase; edits keep one buyer/product row
+ok 49 - QA-D01 reviews require an owned delivered and paid purchase; edits keep one buyer/product row
+  ---
+  duration_ms: 1.7432
+  ...
+# Subtest: shopping intent and Vietnamese references/quantities
+ok 50 - shopping intent and Vietnamese references/quantities
+  ---
+  duration_ms: 6.2212
+  ...
+# Subtest: shared CartService validates input, stock, ownership, totals and locks writes
+ok 51 - shared CartService validates input, stock, ownership, totals and locks writes
+  ---
+  duration_ms: 6.103
+  ...
+# Subtest: shopping HTTP integrates authenticated chat with the regular cart API
+    # Subtest: DTO and credentials reject spoofed input; anonymous browsing remains public
+    ok 1 - DTO and credentials reject spoofed input; anonymous browsing remains public
+      ---
+      duration_ms: 164.7701
+      ...
+    # Subtest: latest search order, exact selection, natural add/update/view and API totals agree
+    ok 2 - latest search order, exact selection, natural add/update/view and API totals agree
+      ---
+      duration_ms: 77.8377
+      ...
+    # Subtest: invalid quantities, stale/missing products and failures never claim success
+    ok 3 - invalid quantities, stale/missing products and failures never claim success
+      ---
+      duration_ms: 49.742
+      ...
+    # Subtest: same requestId is applied once, including simultaneous requests
+    ok 4 - same requestId is applied once, including simultaneous requests
+      ---
+      duration_ms: 17.2874
+      ...
+    # Subtest: buy-now preview includes existing cart; explicit confirmation rechecks facts and never creates an order
+    ok 5 - buy-now preview includes existing cart; explicit confirmation rechecks facts and never creates an order
+      ---
+      duration_ms: 39.0053
+      ...
+    # Subtest: new search replaces selection, cheaper search uses current product and removal uses owned cart
+    ok 6 - new search replaces selection, cheaper search uses current product and removal uses owned cart
+      ---
+      duration_ms: 45.4262
+      ...
+    # Subtest: expired sessions and expired tokens cannot reuse a previous selection
+    ok 7 - expired sessions and expired tokens cannot reuse a previous selection
+      ---
+      duration_ms: 21.1958
+      ...
+    1..7
+ok 52 - shopping HTTP integrates authenticated chat with the regular cart API
+  ---
+  duration_ms: 726.0535
+  ...
+# Subtest: confirmation requires another review if a regular cart write races with confirmation
+ok 53 - confirmation requires another review if a regular cart write races with confirmation
+  ---
+  duration_ms: 1.1764
+  ...
+# Subtest: phase 1 HTTP: real business services over isolated fixtures
+    # Subtest: anonymous orders and spoofed userId / nested DTO are rejected
+    ok 1 - anonymous orders and spoofed userId / nested DTO are rejected
+      ---
+      duration_ms: 97.6044
+      ...
+    # Subtest: order ownership, separate ordinal lists, recent order and contextual payment lookup
+    ok 2 - order ownership, separate ordinal lists, recent order and contextual payment lookup
+      ---
+      duration_ms: 78.9967
+      ...
+    # Subtest: favorites reuse services; semantic interpretation handles a paraphrase; missing product fails
+    ok 3 - favorites reuse services; semantic interpretation handles a paraphrase; missing product fails
+      ---
+      duration_ms: 45.6277
+      ...
+    # Subtest: address ownership, form collection, real defaults and deletion confirmation
+    ok 4 - address ownership, form collection, real defaults and deletion confirmation
+      ---
+      duration_ms: 68.1031
+      ...
+    # Subtest: multi-add is atomic, rejects missing/ambiguous/out-of-stock products and replays once
+    ok 5 - multi-add is atomic, rejects missing/ambiguous/out-of-stock products and replays once
+      ---
+      duration_ms: 32.2467
+      ...
+    # Subtest: Vietnamese quantities and existing natural cart update/removal run through the new adapter
+    ok 6 - Vietnamese quantities and existing natural cart update/removal run through the new adapter
+      ---
+      duration_ms: 18.941
+      ...
+    # Subtest: contextual address edits and favorite ordinals cannot target stale product/cart lists
+    ok 7 - contextual address edits and favorite ordinals cannot target stale product/cart lists
+      ---
+      duration_ms: 47.0873
+      ...
+    # Subtest: active voucher eligibility uses current cart total and never says applied
+    ok 8 - active voucher eligibility uses current cart total and never says applied
+      ---
+      duration_ms: 18.3154
+      ...
+    # Subtest: clear cart requires confirmation; snapshot changes, cancellation, replay and session isolation
+    ok 9 - clear cart requires confirmation; snapshot changes, cancellation, replay and session isolation
+      ---
+      duration_ms: 41.3445
+      ...
+    # Subtest: credentials never enter interpreter, shared knowledge or request history
+    ok 10 - credentials never enter interpreter, shared knowledge or request history
+      ---
+      duration_ms: 4.9107
+      ...
+    # Subtest: new action emits structured SSE; subsequent genuine Gemini stream emits before finishing
+    ok 11 - new action emits structured SSE; subsequent genuine Gemini stream emits before finishing
+      ---
+      duration_ms: 13.9463
+      ...
+    1..11
+ok 54 - phase 1 HTTP: real business services over isolated fixtures
+  ---
+  duration_ms: 759.6861
+  ...
+# Subtest: Gemini interpreter accepts structured supported actions and rejects malformed / invented actions
+ok 55 - Gemini interpreter accepts structured supported actions and rejects malformed / invented actions
+  ---
+  duration_ms: 0.6332
+  ...
+1..55
+# tests 106
+# suites 0
+# pass 106
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 61298.4325
