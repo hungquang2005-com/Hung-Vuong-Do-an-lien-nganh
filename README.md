@@ -1,4 +1,4 @@
-# Hùng Vương Gia Dụng
+# Gia Dụng Việt
 
 ## Thành viên
 
@@ -117,6 +117,8 @@ PAYOS_API_KEY=
 PAYOS_CHECKSUM_KEY=
 PAYOS_RETURN_URL=http://localhost:5173/checkout/success
 PAYOS_CANCEL_URL=http://localhost:5173/checkout/success
+# Điền thêm để PayOS có thể gửi thanh toán thành công tới backend thông qua NGROK
+NGROK_URL=
 
 # Tùy chọn: chatbot AI và email OTP
 GEMINI_API_KEY=
