@@ -168,6 +168,12 @@ npm run dev
 
 Mở địa chỉ được Vite hiển thị (mặc định là **http://localhost:5173**). Để sử dụng ứng dụng, giữ cả backend và frontend chạy đồng thời.
 
+-----------------------------------------------
+Mở trang admin với tên tài khoản:
+Tên đăng nhập: admin@shop.com
+Mật khẩu: admin123
+--------http://localhost:5173/admin------------
+
 ## Tài khoản và dữ liệu trình diễn
 
 File `database/schema.sql` cung cấp dữ liệu khởi tạo. Hãy kiểm tra tài khoản mẫu trực tiếp trong file SQL trước khi đăng nhập; nếu không có tài khoản phù hợp, đăng ký tài khoản mới và cấp vai trò ADMIN trong database khi cần trình diễn khu vực quản trị. Không sử dụng mật khẩu mẫu trên môi trường công khai.
